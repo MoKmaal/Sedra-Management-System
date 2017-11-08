@@ -3,11 +3,26 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/I:/New%20Folder/Sedra/src/panels/UpdatePanel.java</file>
-            <file>file:/I:/New%20Folder/Sedra/src/panels/HomePanel.java</file>
-            <file>file:/I:/New%20Folder/Sedra/src/Database/Items.java</file>
-            <file>file:/I:/New%20Folder/Sedra/src/Database/StoreData.java</file>
-            <file>file:/I:/New%20Folder/Sedra/src/panels/LoginPanel.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/Database/Items.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/panels/UpdatePanel.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/panels/ManagePanel.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/Database/HomeData.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/panels/AccountPanel.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/Database/Connect.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/Database/DebtData.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/panels/NewJFrame.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/panels/NewPanel.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/panels/ReceiptPanel.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/panels/NewJFrame1.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/panels/HomePanel.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/Database/StoreData.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/sedra/Colors.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/panels/NewJFrame2.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/sedra/SedraUI.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/Database/Retrieve.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/Database/AddCustomerData.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/panels/AddCustomerPanel.java</file>
+            <file>file:/home/mohammed/Desktop/New%20Folder/Sedra/src/Database/AccountData.java</file>
         </group>
     </open-files>
 </project-private>

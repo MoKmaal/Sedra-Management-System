@@ -8,6 +8,7 @@ package panels;
 import Database.Connect;
 import Database.Login;
 import java.awt.Dimension;
+import java.awt.print.PrinterException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -192,7 +193,11 @@ public class ManagePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void paymentListenerMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paymentListenerMousePressed
-
+        try {
+            manageTable.print();
+        } catch (PrinterException ex) {
+            Logger.getLogger(ManagePanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_paymentListenerMousePressed
 
@@ -203,6 +208,7 @@ public class ManagePanel extends javax.swing.JPanel {
         year = dateChooserPanel1.getSelectedDate().getTime().getYear() + 1900;
 
         String time = String.format("%d-%02d-%02d", year, month, day);
+        System.out.println(time);
         getPayment(time);
         try {
             showReport(time);
@@ -294,20 +300,20 @@ public class ManagePanel extends javax.swing.JPanel {
                 try {
                     showReport(time);
                 } catch (SQLException ex) {
-                    Logger.getLogger(ManagePanel.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
                 try {
                     NewJFrame1 frame1 = new NewJFrame1(time);
                     frame1.setVisible(true);
                 } catch (SQLException ex) {
-                    Logger.getLogger(ManagePanel.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "You don't have permission to access this data");
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Please Login First");
+            JOptionPane.showMessageDialog(this, "Login First  " + e.getMessage());
         }
     }//GEN-LAST:event_YearPaymentMousePressed
 
@@ -325,20 +331,21 @@ public class ManagePanel extends javax.swing.JPanel {
                 try {
                     showReport(time);
                 } catch (SQLException ex) {
-                    Logger.getLogger(ManagePanel.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
                 try {
                     NewJFrame1 frame1 = new NewJFrame1(time);
                     frame1.setVisible(true);
                 } catch (SQLException ex) {
-                    Logger.getLogger(ManagePanel.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "You don't have permission to access this data");
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Please Login First");
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Please Login First  " + e.getMessage());
         }
 
     }//GEN-LAST:event_monthPaymentMousePressed

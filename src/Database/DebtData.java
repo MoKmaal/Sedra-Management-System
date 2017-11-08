@@ -8,11 +8,13 @@ package Database;
 import static Database.Connect.HOST_NAME;
 import static Database.Connect.PASSWORD;
 import static Database.Connect.URL;
+import Files.CustomersReports;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import javax.swing.JOptionPane;
 
 /**
@@ -41,6 +43,9 @@ public class DebtData {
                 JOptionPane.showMessageDialog(null, "Value Greater Than have to pay");
 
             } else {
+                CustomersReports cr = new CustomersReports();
+                Timestamp t = new Timestamp(System.currentTimeMillis());
+                cr.writeDataIntoFile(name, t.toString(), String.valueOf(cost));
 
                 res.next();
 

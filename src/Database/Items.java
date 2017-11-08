@@ -30,6 +30,11 @@ public class Items {
     private float cusPrice;
     private String query;
     private int zz;
+    private float buyPrice;
+
+    public void setBuyPrice(float buyPrice) {
+        this.buyPrice = buyPrice;
+    }
 
     public void setSize(String size) {
         this.size = size;
@@ -50,24 +55,26 @@ public class Items {
     public void setDocPrice(float docPrice) {
         this.docPrice = docPrice;
     }
+    
 
     public void addNew() {
         try (Connection conn = DriverManager.getConnection(URL, HOST_NAME, PASSWORD);
                 Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
-            query = "Insert into Store (itemID,itemQuantity,itemCustomerPrice,itemDocPrice,itemSize) Values ('"
+            query = "Insert into Store (itemID,itemQuantity,itemCustomerPrice,itemDocPrice,itemSize,buyPrice) Values ('"
                     + name + "',"
                     + quantity
                     + "," + cusPrice + ","
-                    + docPrice + ",'" + size + "')";
+                    + docPrice + ",'" + size + "'," + buyPrice + ")";
 
             stmt.executeUpdate(query);
         } catch (SQLException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Unable to updateItem " + ex.getMessage());
         }
 
     }
 
-    public void updateExisting(int zz) {
+    public void updateExisting(int zz, boolean check) {
         try (Connection conn = DriverManager.getConnection(URL, HOST_NAME, PASSWORD);
                 Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
             int z = 0;
@@ -76,10 +83,12 @@ public class Items {
             if (z != 0) {
                 query = "Update  Store SET itemID='" + name + "',itemQuantity="
                         + (quantity) + ",itemCustomerPrice="
-                        + cusPrice + ",itemDocPrice=" + docPrice + ",itemSize='" + size + "' WHERE itemID='" + name + "' AND itemSize='" + size + "'";
+                        + cusPrice + ",itemDocPrice=" + docPrice + ",itemSize='" + size + "',buyPrice=" + buyPrice + " WHERE itemID='" + name + "' AND itemSize='" + size + "'";
                 stmt.executeUpdate(query);
                 if (zz != quantity) {
-                    report();
+                    if (check == false) {
+                        report();
+                    }
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "cancelled");

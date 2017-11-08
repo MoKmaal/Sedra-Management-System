@@ -33,7 +33,7 @@ public class StoreData {
     static ResultSet res;
     static Connection conn;
     static Statement stmt;
-    static String sizesStatic[] = {"xs", "s", "m", "l", "xl", "xxl", "xxxl", "xxxxl", "xxxxxl",
+    static String sizesStatic[] = {"xxxs","xxs","xs", "s", "m", "l", "xl", "xxl", "xxxl", "xxxxl", "xxxxxl",
         "xxxxxxl"};
 
     public static void getStoreData() throws SQLException {

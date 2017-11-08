@@ -31,6 +31,7 @@ import sedra.SedraUI;
 import static sedra.SedraUI.height;
 import static sedra.SedraUI.width;
 import static panels.ReceiptPanel.invoicetable;
+import static panels.ReceiptPanel.resultsTable;
 
 /**
  *
@@ -48,6 +49,8 @@ public class HomePanel extends javax.swing.JPanel {
     public static ArrayList number;
     float pay = 0;
     Object[] vec;
+    float getremain, getpaid;
+    private String selectedType;
 
     public void updatePanel() {
 
@@ -62,7 +65,7 @@ public class HomePanel extends javax.swing.JPanel {
         jPanel2.setBounds(0, 0, 3 * width / 4, height / 4);
         jPanel2.setSize(new Dimension(3 * width / 4, height / 4));
         dataPane.setBounds(0, height / 4, 3 * width / 4, height / 4);
-        jScrollPane1.setBounds(0, height / 2, 3 * width / 4, (height / 2)-30);
+        jScrollPane1.setBounds(0, height / 2, 3 * width / 4, (height / 2) - 30);
 
         StoreData.getStoreData();
         addSelectionBoxesToTable();
@@ -106,8 +109,6 @@ public class HomePanel extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         customerRemain = new javax.swing.JTextField();
         submit = new javax.swing.JButton();
-        visaButton = new javax.swing.JRadioButton();
-        cashButton = new javax.swing.JRadioButton();
         customerDiscount = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
 
@@ -144,6 +145,7 @@ public class HomePanel extends javax.swing.JPanel {
         warning.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
         warning.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("warning");
 
@@ -183,7 +185,7 @@ public class HomePanel extends javax.swing.JPanel {
         );
 
         homePanel.add(jPanel2);
-        jPanel2.setBounds(0, 0, 752, 152);
+        jPanel2.setBounds(0, 0, 768, 150);
 
         jScrollPane1.setBorder(null);
 
@@ -227,6 +229,7 @@ public class HomePanel extends javax.swing.JPanel {
 
         dataPane.setBackground(Colors.PANELS_COLOR);
 
+        customerTypeCombo.setBackground(Colors.FIELDS_COLOR);
         customerTypeCombo.setForeground(new java.awt.Color(64, 43, 100));
         customerTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "Doctor", "Customer" }));
         customerTypeCombo.addActionListener(new java.awt.event.ActionListener() {
@@ -235,18 +238,22 @@ public class HomePanel extends javax.swing.JPanel {
             }
         });
 
+        customerNameIDCombo.setBackground(Colors.FIELDS_COLOR);
         customerNameIDCombo.setForeground(new java.awt.Color(64, 43, 100));
         customerNameIDCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         customerNameIDCombo.setBorder(null);
         customerNameIDCombo.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
         customerNameIDCombo.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel1.setForeground(Colors.LABELS_COLOR);
         jLabel1.setText("Customer Type");
 
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel2.setForeground(Colors.LABELS_COLOR);
         jLabel2.setText("Customer Name/ID");
 
+        jLabel5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel5.setForeground(Colors.LABELS_COLOR);
         jLabel5.setText("Paid");
 
@@ -257,6 +264,7 @@ public class HomePanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel6.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel6.setForeground(Colors.LABELS_COLOR);
         jLabel6.setText("Remain");
 
@@ -273,25 +281,14 @@ public class HomePanel extends javax.swing.JPanel {
             }
         });
 
-        buttonGroup1.add(visaButton);
-        visaButton.setForeground(Colors.LABELS_COLOR);
-        visaButton.setText("Visa");
-        visaButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                visaButtonActionPerformed(evt);
-            }
-        });
-
-        buttonGroup1.add(cashButton);
-        cashButton.setForeground(Colors.LABELS_COLOR);
-        cashButton.setText("Cash");
-
+        customerDiscount.setBackground(Colors.FIELDS_COLOR);
         customerDiscount.setForeground(new java.awt.Color(64, 43, 100));
         customerDiscount.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0%", "1%", "2%", "3%", "4%", "5%", "6%", "7%", "8%", "9%", "10%", "11%", "12%", "13%", "14%", "15%", "16%", "17%", "18%", "19%", "20%", "21%", "22%", "23%", "24%", "25%", "26%", "27%", "28%", "29%", "30%" }));
         customerDiscount.setBorder(null);
         customerDiscount.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
         customerDiscount.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
+        jLabel7.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel7.setForeground(Colors.LABELS_COLOR);
         jLabel7.setText("Discount");
 
@@ -307,34 +304,27 @@ public class HomePanel extends javax.swing.JPanel {
                     .addGroup(dataPaneLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel1))
-                    .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(customerPaidField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(dataPaneLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel5))))
+                    .addGroup(dataPaneLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel5))
+                    .addGroup(dataPaneLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(customerPaidField, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(customerRemain, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(customerNameIDCombo, javax.swing.GroupLayout.Alignment.LEADING, 0, 260, Short.MAX_VALUE)
                         .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addComponent(jLabel6)
-                    .addGroup(dataPaneLayout.createSequentialGroup()
-                        .addComponent(visaButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cashButton)))
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(customerDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(dataPaneLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(submit, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(dataPaneLayout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(dataPaneLayout.createSequentialGroup()
-                        .addComponent(customerDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(19, 19, 19)
+                        .addComponent(jLabel7))
+                    .addComponent(submit, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         dataPaneLayout.setVerticalGroup(
             dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -349,31 +339,21 @@ public class HomePanel extends javax.swing.JPanel {
                     .addComponent(customerTypeCombo)
                     .addComponent(customerDiscount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
                     .addComponent(customerNameIDCombo, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(18, 18, 18)
+                .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(dataPaneLayout.createSequentialGroup()
-                        .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(dataPaneLayout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(visaButton)
-                                    .addComponent(cashButton))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6))
-                            .addGroup(dataPaneLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel5)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(customerRemain, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(customerPaidField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dataPaneLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(submit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(46, Short.MAX_VALUE))
+                    .addComponent(submit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(customerRemain, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(customerPaidField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         homePanel.add(dataPane);
-        dataPane.setBounds(0, 170, 760, 190);
+        dataPane.setBounds(0, 170, 756, 190);
 
         add(homePanel);
         homePanel.setBounds(0, 6, 832, 580);
@@ -414,15 +394,29 @@ public class HomePanel extends javax.swing.JPanel {
     private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
         int sure = JOptionPane.showConfirmDialog(this, "من فضلك تاكد من ادخال رقم 0 فى خانة ال payment بعد التاكد من اختيار جميع الاكواد ، ان كنت متاكد اضغط Yes");
 
+        if (HomePanel.dtm != null) {
+
+            HomePanel.dtm.setRowCount(0);
+            resultsTable.setValueAt("", 0, 0);
+            resultsTable.setValueAt("", 0, 1);
+            resultsTable.setValueAt("", 1, 0);
+            resultsTable.setValueAt("", 1, 1);
+            resultsTable.setValueAt("", 2, 0);
+            resultsTable.setValueAt("", 2, 1);
+        }
         if (sure == JOptionPane.YES_OPTION) {
-            if ((visaButton.isSelected() || cashButton.isSelected()) && !customerTypeCombo.getSelectedItem().equals("") && customerPaidField.getText().length() != 0) {
+            if (!customerTypeCombo.getSelectedItem().equals("") && customerPaidField.getText().length() != 0) {
                 try {
 
                     Random r = new Random();
                     int x = r.nextInt(999999999);
                     // TODO add your handling code here:
+                    selectedType = customerTypeCombo.getSelectedItem().toString();
+                    getpaid = Float.parseFloat(customerPaidField.getText());
+                    getremain = Float.parseFloat(customerRemain.getText());
                     getSelectedItemsFromTable(x);
                     reset();
+
                     printInvoiceData(x, (String) customerNameIDCombo.getSelectedItem());
 
                 } catch (SQLException ex) {
@@ -433,7 +427,16 @@ public class HomePanel extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Please Re enter data ");
 
             }
+            if (getremain == 0) {
+                AccountPanel.daf3Agel(customerNameIDCombo.getSelectedItem().toString(), getpaid);
+
+            } else if (getpaid == 0) {
+
+            } else if (getpaid != 0 && getremain != 0) {
+                AccountPanel.daf3Agel(customerNameIDCombo.getSelectedItem().toString(), getpaid);
+            }
         }
+
     }//GEN-LAST:event_submitActionPerformed
     private void printInvoiceData(int recID, String name) {
         try {
@@ -503,7 +506,7 @@ public class HomePanel extends javax.swing.JPanel {
                 String s = customerDiscount.getSelectedItem().toString();
                 ReceiptPanel.resultsTable.setValueAt(s, 1, 1);
                 int afterdisc = Integer.parseInt(s.replace("%", ""));
-                float lastTotal = totalPrice - (totalPrice * afterdisc / 100);
+                float lastTotal = totalPrice - (totalPrice * afterdisc * 1.0f / 100f);
                 ReceiptPanel.resultsTable.setValueAt("Price ", 2, 0);
                 ReceiptPanel.resultsTable.setValueAt(lastTotal, 2, 1);
 
@@ -511,6 +514,7 @@ public class HomePanel extends javax.swing.JPanel {
             SedraUI.visibility(false, true, false, false, false, false, false, false, false);
             ReceiptPanel.setCustomerName(name);
             JOptionPane.showMessageDialog(this, "DONE");
+            customerDiscount.setSelectedIndex(0);
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unable to print invoice " + ex.getMessage());
@@ -533,14 +537,9 @@ public class HomePanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jLabel17MousePressed
 
-    private void visaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visaButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_visaButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JRadioButton cashButton;
     public static javax.swing.JComboBox<String> customerDiscount;
     public static javax.swing.JComboBox<String> customerNameIDCombo;
     private javax.swing.JTextField customerPaidField;
@@ -561,15 +560,16 @@ public class HomePanel extends javax.swing.JPanel {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField searchItemfield;
     private javax.swing.JButton submit;
-    private javax.swing.JRadioButton visaButton;
     private javax.swing.JComboBox<String> warning;
     // End of variables declaration//GEN-END:variables
 
     private void addToTable() {
         warning.removeAllItems();
         boolean x = false;
-        String rwmp = StoreData.listID.get(0);
-
+        String rwmp = "";
+        if (StoreData.listID.size() != 0) {
+            rwmp = StoreData.listID.get(0);
+        }
         for (int i = 0; i < StoreData.listCustomerPrice.size(); i++) {
             if (x == true) {
                 if (rwmp.equalsIgnoreCase(StoreData.listID.get(i))) {
@@ -612,7 +612,7 @@ public class HomePanel extends javax.swing.JPanel {
                 warning.addItem(StoreData.listID.get(i));
             }
         }
-/*
+        /*
         if (x == false) {
 
             for (int i = 0; i < StoreData.listCustomerPrice.size(); i++) {
@@ -630,7 +630,7 @@ public class HomePanel extends javax.swing.JPanel {
                 }
             }
         }
-*/
+         */
 
     }
 
@@ -677,11 +677,37 @@ public class HomePanel extends javax.swing.JPanel {
 
                         String insertIntoSalesTableQuery;
                         try {
-                            insertIntoSalesTableQuery = "Insert into Sales (recID,customerID,employeeID,itemID,Size,salesQuantity,salesPaid,paymentType) Values ("
-                                    + recID + "," + id + "," + Login.empID
-                                    + ",'" + jTable1.getValueAt(i, 2).toString() + "','" + jTable1.getValueAt(i, 3).toString() + "',"
-                                    + Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))
-                                    + "," + Integer.parseInt(customerPaidField.getText()) + ",'" + customerDiscount.getSelectedItem().toString() + "')";
+                            if (getremain == 0) {
+                                if (selectedType.equalsIgnoreCase("Customer")) {
+                                    insertIntoSalesTableQuery = "Insert into Sales (recID,customerID,employeeID,itemID,Size,salesQuantity,salesPaid,paymentType) Values ("
+                                            + recID + "," + id + "," + Login.empID
+                                            + ",'" + jTable1.getValueAt(i, 2).toString() + "','" + jTable1.getValueAt(i, 3).toString() + "',"
+                                            + Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))
+                                            + "," + (Integer.parseInt((String) jTable1.getValueAt(i, 6))
+                                            * Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))) + ",'" + customerDiscount.getSelectedItem().toString() + "')";
+                                } else {
+                                    insertIntoSalesTableQuery = "Insert into Sales (recID,customerID,employeeID,itemID,Size,salesQuantity,salesPaid,paymentType) Values ("
+                                            + recID + "," + id + "," + Login.empID
+                                            + ",'" + jTable1.getValueAt(i, 2).toString() + "','" + jTable1.getValueAt(i, 3).toString() + "',"
+                                            + Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))
+                                            + "," + (Integer.parseInt((String) jTable1.getValueAt(i, 5))
+                                            * Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))) + ",'" + customerDiscount.getSelectedItem().toString() + "')";
+
+                                }
+                            } else if (getpaid == 0) {
+                                insertIntoSalesTableQuery = "Insert into Sales (recID,customerID,employeeID,itemID,Size,salesQuantity,salesPaid,paymentType) Values ("
+                                        + recID + "," + id + "," + Login.empID
+                                        + ",'" + jTable1.getValueAt(i, 2).toString() + "','" + jTable1.getValueAt(i, 3).toString() + "',"
+                                        + Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))
+                                        + "," + Integer.parseInt("0") + ",'" + customerDiscount.getSelectedItem().toString() + "')";
+
+                            } else {
+                                insertIntoSalesTableQuery = "Insert into Sales (recID,customerID,employeeID,itemID,Size,salesQuantity,salesPaid,paymentType) Values ("
+                                        + recID + "," + id + "," + Login.empID
+                                        + ",'" + jTable1.getValueAt(i, 2).toString() + "','" + jTable1.getValueAt(i, 3).toString() + "',"
+                                        + Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))
+                                        + "," + Integer.parseInt("0") + ",'" + customerDiscount.getSelectedItem().toString() + "')";
+                            }
                         } catch (NumberFormatException ex) {
                             continue;
                         }

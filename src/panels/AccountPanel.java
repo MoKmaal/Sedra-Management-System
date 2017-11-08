@@ -8,6 +8,7 @@ package panels;
 import Database.AccountData;
 import Database.Connect;
 import Database.DebtData;
+import Database.HomeData;
 import Database.Retrieve;
 import Files.CustomersReports;
 import java.io.File;
@@ -23,6 +24,7 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import sedra.Colors;
@@ -66,8 +68,9 @@ public class AccountPanel extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
-        searchItemfield = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        customerTypeComboSearch = new javax.swing.JComboBox<>();
+        customerNameIDComboSearch = new javax.swing.JComboBox<>();
         customerAccountPane = new javax.swing.JPanel();
         customerName = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -75,15 +78,15 @@ public class AccountPanel extends javax.swing.JPanel {
         haveToPay = new javax.swing.JLabel();
         customerAddress = new javax.swing.JLabel();
         customerMail = new javax.swing.JLabel();
-        label = new javax.swing.JLabel();
-        lastTransaction = new javax.swing.JLabel();
         customerPhone1 = new javax.swing.JLabel();
         customerPhone2 = new javax.swing.JLabel();
         customerPhone3 = new javax.swing.JLabel();
         customerPhone4 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         allCustomerInvoices = new javax.swing.JTable();
-        everyItem = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setLayout(null);
 
@@ -107,6 +110,22 @@ public class AccountPanel extends javax.swing.JPanel {
             }
         });
 
+        customerTypeComboSearch.setBackground(Colors.FIELDS_COLOR);
+        customerTypeComboSearch.setForeground(new java.awt.Color(64, 43, 100));
+        customerTypeComboSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "Doctor", "Customer" }));
+        customerTypeComboSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                customerTypeComboSearchActionPerformed(evt);
+            }
+        });
+
+        customerNameIDComboSearch.setBackground(Colors.FIELDS_COLOR);
+        customerNameIDComboSearch.setForeground(new java.awt.Color(64, 43, 100));
+        customerNameIDComboSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
+        customerNameIDComboSearch.setBorder(null);
+        customerNameIDComboSearch.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        customerNameIDComboSearch.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -117,8 +136,10 @@ public class AccountPanel extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel17)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchItemfield, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(customerTypeComboSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(customerNameIDComboSearch, 0, 0, Short.MAX_VALUE)
+                        .addGap(24, 24, 24)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel4))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -128,11 +149,12 @@ public class AccountPanel extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addComponent(jLabel4)
-                .addGap(28, 28, 28)
+                .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(searchItemfield)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(customerTypeComboSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(customerNameIDComboSearch))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -157,25 +179,6 @@ public class AccountPanel extends javax.swing.JPanel {
 
         customerMail.setForeground(Colors.LABELS_COLOR);
         customerMail.setText(" ");
-
-        label.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        label.setForeground(Colors.LABELS_COLOR);
-        label.setText("مرتجع");
-        label.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                labelMousePressed(evt);
-            }
-        });
-
-        lastTransaction.setBackground(new java.awt.Color(0, 51, 102));
-        lastTransaction.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        lastTransaction.setForeground(Colors.LABELS_COLOR);
-        lastTransaction.setText("دفع");
-        lastTransaction.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lastTransactionMousePressed(evt);
-            }
-        });
 
         customerPhone1.setForeground(Colors.LABELS_COLOR);
         customerPhone1.setText("Phone:");
@@ -211,12 +214,33 @@ public class AccountPanel extends javax.swing.JPanel {
         });
         jScrollPane3.setViewportView(allCustomerInvoices);
 
-        everyItem.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        everyItem.setForeground(Colors.LABELS_COLOR);
-        everyItem.setText("دفع تفصيلى");
-        everyItem.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                everyItemMousePressed(evt);
+        jButton1.setBackground(Colors.SIDE_COLOR);
+        jButton1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jButton1.setForeground(Colors.PANELS_COLOR);
+        jButton1.setText("مرتجع");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setBackground(Colors.SIDE_COLOR);
+        jButton2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jButton2.setForeground(Colors.PANELS_COLOR);
+        jButton2.setText("دفع آجل");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setBackground(Colors.SIDE_COLOR);
+        jButton3.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jButton3.setForeground(Colors.PANELS_COLOR);
+        jButton3.setText("دفع تفصيلى لكل قطعة");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
             }
         });
 
@@ -228,39 +252,41 @@ public class AccountPanel extends javax.swing.JPanel {
                 .addGap(55, 55, 55)
                 .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(customerAccountPaneLayout.createSequentialGroup()
-                        .addComponent(everyItem, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(customerName, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lastTransaction, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(73, 73, 73))
-                    .addGroup(customerAccountPaneLayout.createSequentialGroup()
-                        .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(customerAccountPaneLayout.createSequentialGroup()
                                 .addGap(22, 22, 22)
-                                .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(customerAccountPaneLayout.createSequentialGroup()
-                                        .addComponent(customerPhone1)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(customerPhone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(customerAccountPaneLayout.createSequentialGroup()
-                                        .addComponent(customerPhone3)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(customerMail, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(customerName, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(customerAccountPaneLayout.createSequentialGroup()
-                                        .addComponent(customerPhone2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(customerAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(customerAccountPaneLayout.createSequentialGroup()
-                                        .addComponent(customerPhone4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(haveToPay, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                        .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(customerAccountPaneLayout.createSequentialGroup()
+                                                .addComponent(customerPhone1)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(customerPhone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(customerAccountPaneLayout.createSequentialGroup()
+                                                .addComponent(customerPhone3)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(customerMail, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(customerAccountPaneLayout.createSequentialGroup()
+                                                .addComponent(customerPhone2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(customerAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(customerAccountPaneLayout.createSequentialGroup()
+                                                .addComponent(customerPhone4)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(haveToPay, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                        .addContainerGap(57, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, customerAccountPaneLayout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1)
+                            .addComponent(jButton2))
+                        .addGap(145, 145, 145))))
             .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(customerAccountPaneLayout.createSequentialGroup()
                     .addGap(3, 3, 3)
@@ -270,17 +296,17 @@ public class AccountPanel extends javax.swing.JPanel {
         customerAccountPaneLayout.setVerticalGroup(
             customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(customerAccountPaneLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(label)
-                .addGap(18, 18, 18)
-                .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(customerName)
-                        .addComponent(everyItem))
-                    .addComponent(lastTransaction))
+                .addGap(28, 28, 28)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(customerName)
+                .addGap(4, 4, 4)
                 .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(customerPhone)
                     .addComponent(customerPhone1)
@@ -292,7 +318,7 @@ public class AccountPanel extends javax.swing.JPanel {
                     .addComponent(haveToPay)
                     .addComponent(customerPhone3)
                     .addComponent(customerMail))
-                .addContainerGap(327, Short.MAX_VALUE))
+                .addContainerGap(304, Short.MAX_VALUE))
             .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, customerAccountPaneLayout.createSequentialGroup()
                     .addContainerGap(267, Short.MAX_VALUE)
@@ -310,7 +336,10 @@ public class AccountPanel extends javax.swing.JPanel {
     private void jLabel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MousePressed
         try {
             // TODO add your handling code here:
-            String name = searchItemfield.getText();
+            String name = customerNameIDComboSearch.getSelectedItem().toString();
+            if (name.length() == 0) {
+                JOptionPane.showMessageDialog(this, "رجاء اختيار اسم العميل");
+            }
             HashMap hashMap = AccountData.getCustomerData(name);
             customerName.setText((String) hashMap.get("customerName"));
             customerMail.setText((String) hashMap.get("customerMail"));
@@ -325,7 +354,7 @@ public class AccountPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Unable to get data " + ex.getMessage());
         }
         try {
-            JFrame f = new NewJFrame(searchItemfield.getText());
+            JFrame f = new NewJFrame(customerNameIDComboSearch.getSelectedItem().toString());
             f.setSize(800, 800);
             f.setVisible(true);
 
@@ -336,38 +365,13 @@ public class AccountPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jLabel1MousePressed
 
-    private void lastTransactionMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lastTransactionMousePressed
-        try {
-            // TODO add your handling code here:
-            String name = JOptionPane.showInputDialog("Insert Name");
-
-            float val = Float.parseFloat(JOptionPane.showInputDialog("Insert Value "));
-            DebtData.execute(name, val);
-            CustomersReports cr = new CustomersReports();
-            Timestamp t = new Timestamp(System.currentTimeMillis());
-            cr.writeDataIntoFile(name, t.toString(), String.valueOf(val));
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Check name or value");
-            ex.printStackTrace();
-        }
-
-    }//GEN-LAST:event_lastTransactionMousePressed
-
-
-    private void labelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelMousePressed
-        // TODO add your handling code here:
-        Retrieve r = new Retrieve();
-        r.increaseStore(searchItemfield.getText());
-
-    }//GEN-LAST:event_labelMousePressed
-
-    private void everyItemMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_everyItemMousePressed
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         String recID;
         int customerID;
         String customerNameString = null;
         String line = null;
-        recID = JOptionPane.showInputDialog(this, "Enter recID");
+        recID = JOptionPane.showInputDialog(this, "ادخل رقم الفاتورة");
         if (recID.trim().length() > 0) {
             Connection conn = null;
             Statement stmt = null;
@@ -443,8 +447,43 @@ public class AccountPanel extends javax.swing.JPanel {
             }
 
         }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
-    }//GEN-LAST:event_everyItemMousePressed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        daf3Agel();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void customerTypeComboSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerTypeComboSearchActionPerformed
+        // TODO add your handling code here:
+        String x = customerTypeComboSearch.getSelectedItem().toString();
+        customerNameIDComboSearch.removeAll();
+
+        if (x.equalsIgnoreCase("Customer")) {
+            try {
+                customerNameIDComboSearch.setModel(new DefaultComboBoxModel(HomeData.getCustorsList().toArray()));
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Unable to retrieve data " + ex.getMessage());
+            }
+
+        } else {
+            try {
+                customerNameIDComboSearch.setModel(new DefaultComboBoxModel(HomeData.getDoctorsList().toArray()));
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Unable to retrieve data " + ex.getMessage());
+            }
+
+        }
+
+    }//GEN-LAST:event_customerTypeComboSearchActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Retrieve r = new Retrieve();
+        r.increaseStore(customerNameIDComboSearch.getSelectedItem().toString());
+
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -453,22 +492,57 @@ public class AccountPanel extends javax.swing.JPanel {
     private javax.swing.JLabel customerAddress;
     private javax.swing.JLabel customerMail;
     private javax.swing.JLabel customerName;
+    public static javax.swing.JComboBox<String> customerNameIDComboSearch;
     private javax.swing.JLabel customerPhone;
     private javax.swing.JLabel customerPhone1;
     private javax.swing.JLabel customerPhone2;
     private javax.swing.JLabel customerPhone3;
     private javax.swing.JLabel customerPhone4;
-    private javax.swing.JLabel everyItem;
+    private javax.swing.JComboBox<String> customerTypeComboSearch;
     private javax.swing.JLabel haveToPay;
     private javax.swing.JPanel homePanel;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JLabel label;
-    private javax.swing.JLabel lastTransaction;
-    private javax.swing.JTextField searchItemfield;
     // End of variables declaration//GEN-END:variables
+
+    public void daf3Agel() {
+        try {
+            // TODO add your handling code here:
+
+            String name = customerNameIDComboSearch.getSelectedItem().toString();
+            if (name.trim().length() <= 0) {
+                JOptionPane.showInputDialog("اسم العميل");
+            }
+            if (name.trim().length() > 0) {
+                float val = Float.parseFloat(JOptionPane.showInputDialog("قيمة الدفع "));
+                DebtData.execute(name, val);
+                JOptionPane.showMessageDialog(this, "تم تسجيل الدفع بنجاح");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Check name or value");
+            ex.printStackTrace();
+        }
+    }
+
+    public static void daf3Agel(String name, float val) {
+        try {
+            // TODO add your handling code here:
+
+            DebtData.execute(name, val);
+            CustomersReports cr = new CustomersReports();
+            Timestamp t = new Timestamp(System.currentTimeMillis());
+            cr.writeDataIntoFile(name, t.toString(), String.valueOf(val));
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Check name or value");
+            ex.printStackTrace();
+        }
+    }
+
 }

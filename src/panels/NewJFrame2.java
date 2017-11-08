@@ -29,13 +29,14 @@ public class NewJFrame2 extends javax.swing.JFrame {
      */
     DefaultTableModel dtm;
     private String recID;
+    private String s4;
 
     public NewJFrame2(String name, float total, String recID, String customerType) throws SQLException {
         initComponents();
         Connection conn = DriverManager.getConnection(Connect.URL, Connect.HOST_NAME, Connect.PASSWORD);
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         Statement stmt2 = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        ResultSet resultSet = stmt.executeQuery("SELECT itemID,Size,salesQuantity FROM Sales where recID='" + recID + "'");
+        ResultSet resultSet = stmt.executeQuery("SELECT itemID,Size,salesQuantity,salesPaid FROM Sales where recID='" + recID + "'");
         ResultSet resultSet2 = null;
         this.recID = recID;
         String s0;
@@ -50,6 +51,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
             s0 = resultSet.getString(1);
             s1 = resultSet.getString(2);
             s2 = resultSet.getString(3);
+            s4 = resultSet.getString(4);
             if (customerType.equalsIgnoreCase("Doctor")) {
                 resultSet2 = stmt2.executeQuery("SELECT itemDocPrice FROM Store where itemID='" + s0 + "' AND itemSize='" + s1 + "'");
 
@@ -59,8 +61,10 @@ public class NewJFrame2 extends javax.swing.JFrame {
             }
             resultSet2.next();
             String s3 = resultSet2.getString(1);
-
-            Object o[] = {s0, s1, s2, s3};
+            if (s2.equalsIgnoreCase("0")) {
+                continue;
+            }
+            Object o[] = {s0, s1, s2, s3, s4};
 
             dtm.addRow(o);
 
@@ -84,7 +88,6 @@ public class NewJFrame2 extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tableForSpecificData.setBackground(new java.awt.Color(255, 255, 255));
         tableForSpecificData.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         tableForSpecificData.setForeground(Colors.LABELS_COLOR);
         tableForSpecificData.setModel(new javax.swing.table.DefaultTableModel(
@@ -110,6 +113,11 @@ public class NewJFrame2 extends javax.swing.JFrame {
         }
 
         total.setText("Total =");
+        total.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                totalMousePressed(evt);
+            }
+        });
 
         naming.setText("CustomerName");
         naming.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -118,7 +126,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
             }
         });
 
-        submit.setText("Submit");
+        submit.setText("حفظ");
         submit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 submitActionPerformed(evt);
@@ -142,7 +150,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(total, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(submit)
+                        .addComponent(submit, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(15, 15, 15))))
         );
         layout.setVerticalGroup(
@@ -164,6 +172,8 @@ public class NewJFrame2 extends javax.swing.JFrame {
 
     private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
         // TODO add your handling code here:
+        tableForSpecificData.getCellEditor().stopCellEditing();
+
         Connection c;
         Statement s = null;
         ResultSet resultSet;
@@ -175,15 +185,20 @@ public class NewJFrame2 extends javax.swing.JFrame {
             Logger.getLogger(NewJFrame2.class.getName()).log(Level.SEVERE, null, ex);
         }
         for (int i = 0; i < dtm.getRowCount(); i++) {
-            if (dtm.getValueAt(i, 4).toString().trim().length() > 0) {
-                try {
-                    s.executeUpdate("UPDATE Sales set salesPaid=" + Float.parseFloat((String) dtm.getValueAt(i, 4)) + " WHERE "
-                            + "itemID='" + dtm.getValueAt(i, 0) + "' AND Size='" + dtm.getValueAt(i, 1) + "' AND recID=" + recID);
-                } catch (SQLException ex) {
-                    Logger.getLogger(NewJFrame2.class.getName()).log(Level.SEVERE, null, ex);
+            if (dtm.getValueAt(i, 4) != null) {
+
+                if (dtm.getValueAt(i, 4).toString().trim().length() > 0) {
+                    try {
+                        s.executeUpdate("UPDATE Sales set salesPaid=" + Float.parseFloat((String) dtm.getValueAt(i, 4)) + " WHERE "
+                                + "itemID='" + dtm.getValueAt(i, 0) + "' AND Size='" + dtm.getValueAt(i, 1) + "' AND recID=" + recID);
+
+                    } catch (SQLException ex) {
+                        Logger.getLogger(NewJFrame2.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
+
         JOptionPane.showMessageDialog(this, "Done");
         this.dispose();
     }//GEN-LAST:event_submitActionPerformed
@@ -197,6 +212,11 @@ public class NewJFrame2 extends javax.swing.JFrame {
             Logger.getLogger(NewJFrame2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_namingMousePressed
+
+    private void totalMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_totalMousePressed
+        // TODO add your handling code here:
+        tableForSpecificData.getCellEditor().stopCellEditing();
+    }//GEN-LAST:event_totalMousePressed
 
     /**
      * @param args the command line arguments

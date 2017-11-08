@@ -16,9 +16,9 @@ public class Colors {
 
     public static Color PANELS_COLOR = new Color(240, 255, 240);
     public static Color FIELDS_COLOR = PANELS_COLOR;
-    public static Color HEAD_COLOR = new Color(0, 98, 143);
-    public static Color HOVER_COLOR = new Color(0, 135, 197);
-    public static Color SIDE_COLOR = new Color(00, 90, 131);
+    public static Color HEAD_COLOR = new Color(255, 90, 180);
+    public static Color HOVER_COLOR = new Color(228, 114, 151);
+    public static Color SIDE_COLOR = new Color(255, 105, 180);
     public static Color LABELS_COLOR = SIDE_COLOR;
 
     public static Color TITLES_COLOR = new Color(255, 255, 255);

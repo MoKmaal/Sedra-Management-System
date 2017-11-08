@@ -112,7 +112,6 @@ public class SedraUI extends javax.swing.JFrame {
                 s3 = rs.getInt("itemQuantity");
                 stmt1.executeUpdate("INSERT INTO Report values ('" + s0 + "','" + s1 + "','" + s2 + "'," + s3 + ")");
             } catch (SQLException e) {
-                e.printStackTrace();
             }
         }
 
@@ -166,7 +165,7 @@ public class SedraUI extends javax.swing.JFrame {
         );
         getContentPane().setLayout(null);
 
-        bg.setBackground(new java.awt.Color(0, 51, 102));
+        bg.setBackground(new java.awt.Color(255, 20, 147));
         bg.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 bgMouseDragged(evt);

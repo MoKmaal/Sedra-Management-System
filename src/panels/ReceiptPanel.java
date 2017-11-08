@@ -166,7 +166,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
         );
 
         homePanel.add(jPanel2);
-        jPanel2.setBounds(0, 0, 742, 154);
+        jPanel2.setBounds(0, 0, 760, 150);
 
         recPanel.setBackground(Colors.PANELS_COLOR);
         recPanel.setLayout(null);
@@ -252,7 +252,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
         nameRec.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         nameRec.setText("Username");
         recPanel.add(nameRec);
-        nameRec.setBounds(1090, 110, 220, 24);
+        nameRec.setBounds(1090, 110, 220, 22);
 
         dots.setFont(new java.awt.Font("Cambria Math", 1, 18)); // NOI18N
         dots.setText(".....................");
@@ -273,7 +273,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
         AddrRec.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         AddrRec.setText("jLabel3");
         recPanel.add(AddrRec);
-        AddrRec.setBounds(860, 200, 450, 24);
+        AddrRec.setBounds(860, 200, 450, 22);
 
         jScrollPane4.setPreferredSize(new java.awt.Dimension(453, 350));
 

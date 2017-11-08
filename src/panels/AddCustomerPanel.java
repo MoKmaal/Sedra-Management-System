@@ -248,9 +248,9 @@ public class AddCustomerPanel extends javax.swing.JPanel {
 
         AddCustomerData addCustomerData = new AddCustomerData();
         addCustomerData.setUsername(signupNameField.getText().toLowerCase());
-        addCustomerData.setEmail(signupMailField.getText().toLowerCase());
-        addCustomerData.setPhone(signupPhonefield.getText().toLowerCase());
-        addCustomerData.setAddress(signupAddressField.getText().toLowerCase());
+        addCustomerData.setEmail(signupMailField.getText().toLowerCase().replace("email", ""));
+        addCustomerData.setPhone(signupPhonefield.getText().toLowerCase().replace("phone", ""));
+        addCustomerData.setAddress(signupAddressField.getText().toLowerCase().replace("address", ""));
         addCustomerData.setType(signupTypeCombo.getSelectedItem().toString());
         addCustomerData.execute();
         Colors.setColor(SedraUI.homePane);

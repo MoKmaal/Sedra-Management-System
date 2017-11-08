@@ -32,26 +32,31 @@ public class NewJFrame1 extends javax.swing.JFrame {
      * Creates new form NewJFrame1
      */
     public NewJFrame1(String date) throws SQLException {
+        int totals7 = 0, totals6 = 0, totals5 = 0, totals4 = 0, totals3 = 0, totals2 = 0, totals1 = 0, totals0 = 0, totals8 = 0;
         initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         DefaultTableModel defaultTableModel = (DefaultTableModel) report.getModel();
         defaultTableModel.setRowCount(0);
+        report.setRowHeight(30);
         Connection conn = DriverManager.getConnection(Connect.URL, Connect.HOST_NAME, Connect.PASSWORD);
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         ResultSet rs = stmt.executeQuery("SELECT * FROM Report WHERE time LIKE '" + date + "'");
         Statement stmt1 = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         Statement stmt2 = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-
+        
         while (rs.next()) {
             
             System.out.println("print");
             String s0 = rs.getString(2);
             String s1 = rs.getString(3);
             String s2 = rs.getString(4);
-
+            
             ResultSet res = stmt1.executeQuery("SELECT SUM(salesQuantity),SUM(salesPaid) FROM Sales WHERE itemID= '" + s0 + "' AND Size='" + s1 + "'");
             res.next();
             String s3 = res.getString(1);
+            if (s3 == null) {
+                s3 = "0";
+            }
             String s6 = res.getString(2);
             File f = new File("Store/Store" + ".txt");
             if (f.exists()) {
@@ -68,27 +73,79 @@ public class NewJFrame1 extends javax.swing.JFrame {
                     for (int i = 0; i < arr.length; i++) {
                         arr[i] = st.nextToken();
                     }
-                    if (arr[1].equalsIgnoreCase(s0) && arr[2].equalsIgnoreCase(s1)) {
+                    if (arr[0].contains(date) && arr[1].equalsIgnoreCase(s0) && arr[2].equalsIgnoreCase(s1)) {
                         temp += Integer.valueOf(arr[3]);
                     }
                 }
                 String s4 = String.valueOf(temp);
-                ResultSet result = stmt2.executeQuery("SELECT itemDocPrice,itemQuantity FROM Store WHERE itemID= '" + s0 + "' AND itemSize='" + s1 + "'");
+                ResultSet result = stmt2.executeQuery("SELECT itemDocPrice,itemQuantity,buyPrice FROM Store WHERE itemID= '" + s0 + "' AND itemSize='" + s1 + "'");
                 result.next();
                 
-                    System.out.println("result next");
+                System.out.println("result next");
                 int pricePaid = Integer.parseInt(result.getString(1));
+                int buyPrice = Integer.parseInt(result.getString("buyPrice"));
                 int totalStoreQuantity = Integer.parseInt(result.getString(2));
-                String s5 = String.valueOf(pricePaid * Integer.parseInt(s4));
+                String s5 = String.valueOf(buyPrice * Integer.parseInt(s4));
                 String s7 = String.valueOf(pricePaid * totalStoreQuantity);
-                String s8 = String.valueOf(Integer.parseInt(s4)-Integer.parseInt(s3)+Integer.parseInt(s2));
-                Object data[] = {s7, s6, s5, s4, s3, s2, s1, s0,s8};
-
+                Statement stmt3 = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                ResultSet result3 = stmt3.executeQuery("SELECT itemQuantity FROM Store WHERE itemID= '" + s0 + "' AND itemSize='" + s1 + "'");
+                String s8 = String.valueOf(Integer.parseInt(s4) - Integer.parseInt(s3) + Integer.parseInt(s2));
+                
+                if (result3.next()) {
+                    s8 = result3.getString(1);
+                }
+                try {
+                    totals2 += Integer.parseInt(s2);
+                } catch (Exception e) {
+                    
+                }
+                try {
+                    
+                    totals3 += Integer.parseInt(s3);
+                } catch (Exception e) {
+                    
+                }
+                try {
+                    
+                    totals4 += Integer.parseInt(s4);
+                } catch (Exception e) {
+                    
+                }
+                try {
+                    
+                    totals5 += Integer.parseInt(s5);
+                } catch (Exception e) {
+                    
+                }
+                try {
+                    
+                    totals6 += Integer.parseInt(s6);
+                } catch (Exception e) {
+                    
+                }
+                try {
+                    
+                    totals7 += Integer.parseInt(s7);
+                } catch (Exception e) {
+                    
+                }
+                try {
+                    
+                    totals8 += Integer.parseInt(s8);
+                } catch (Exception e) {
+                    
+                }
+                
+                Object data[] = {s7, s6, s5, s4, s3, s2, s1, s0, s8};
+                
                 defaultTableModel.addRow(data);
                 
             }
-
+            
         }
+        Object data[] = {totals7, totals6, totals5, totals4, totals3, totals2, "", "", totals8};
+        defaultTableModel.addRow(data);
+        
         stmt.close();
         conn.close();
         float temp = 0;
@@ -114,7 +171,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
                     temp += Float.parseFloat(arr[1]);
                 }
             }
-
+            
         }
         jLabel1.setText(temp + "اجمالى ايرادات الشهر ");
     }
@@ -135,8 +192,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(Colors.HEAD_COLOR);
 
-        report.setBackground(new java.awt.Color(255, 255, 255));
-        report.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        report.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         report.setForeground(Colors.LABELS_COLOR);
         report.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -173,21 +229,21 @@ public class NewJFrame1 extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 966, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 1260, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();

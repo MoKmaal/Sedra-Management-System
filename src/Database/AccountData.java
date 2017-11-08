@@ -160,6 +160,7 @@ public class AccountData {
         }
 
         rs.first();
+        if(invoiceIndex>0)
         allCustomerInvoices.setValueAt(totalPrice, --invoiceIndex, 6);
     }
 
