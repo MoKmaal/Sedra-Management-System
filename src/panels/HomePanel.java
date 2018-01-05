@@ -567,14 +567,14 @@ public class HomePanel extends javax.swing.JPanel {
         warning.removeAllItems();
         boolean x = false;
         String rwmp = "";
-        if (StoreData.listID.size() != 0) {
-            rwmp = StoreData.listID.get(0);
+        if (!StoreData.newListID.isEmpty()) {
+            rwmp = StoreData.newListID.get(0);
         }
         for (int i = 0; i < StoreData.listCustomerPrice.size(); i++) {
             if (x == true) {
-                if (rwmp.equalsIgnoreCase(StoreData.listID.get(i))) {
+                if (rwmp.equalsIgnoreCase(StoreData.newListID.get(i))) {
                     Object[] row = {"", "",
-                        StoreData.listID.get(i),
+                        StoreData.newListID.get(i),
                         StoreData.listSize.get(i),
                         StoreData.listQuantity.get(i),
                         StoreData.listDocPrice.get(i),
@@ -582,7 +582,7 @@ public class HomePanel extends javax.swing.JPanel {
                     };
                     vec = row.clone();
                 } else {
-                    rwmp = StoreData.listID.get(i);
+                    rwmp = StoreData.newListID.get(i);
                     Object[] row = {"", "",
                         "",
                         "",
@@ -596,7 +596,7 @@ public class HomePanel extends javax.swing.JPanel {
             }
             if (x == false) {
                 Object[] row = {"", "",
-                    StoreData.listID.get(i),
+                    StoreData.newListID.get(i),
                     StoreData.listSize.get(i),
                     StoreData.listQuantity.get(i),
                     StoreData.listDocPrice.get(i),
@@ -609,7 +609,7 @@ public class HomePanel extends javax.swing.JPanel {
             model = (DefaultTableModel) jTable1.getModel();
             model.addRow(vec);
             if (Integer.parseInt(StoreData.listQuantity.get(i)) < 10) {
-                warning.addItem(StoreData.listID.get(i));
+                warning.addItem(StoreData.newListID.get(i));
             }
         }
         /*

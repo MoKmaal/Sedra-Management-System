@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 public class StoreData {
 
     public static List<String> listID = new ArrayList<>();
+    public static List<String> newListID = new ArrayList<>();
     public static List<String> listQuantity = new ArrayList<>();
     public static List<String> listDocPrice = new ArrayList<>();
     public static List<String> listCustomerPrice = new ArrayList<>();
@@ -88,6 +89,7 @@ public class StoreData {
             for (String sizesStatic1 : sizesStatic) {
                 res = stmt.executeQuery(Query + " WHERE itemID='" + newList.get(i) + "' AND itemSize='" + sizesStatic1 + "'");
                 if (res.next()) {
+                    newListID.add((String) newList.get(i));
                     listQuantity.add(res.getString("itemQuantity"));
                     listDocPrice.add(res.getString("itemDocPrice"));
                     listCustomerPrice.add(res.getString("itemCustomerPrice"));
@@ -95,6 +97,10 @@ public class StoreData {
                 }
             }
         }
+        System.out.println("ListID");
+        System.out.println(listID);
+         System.out.println("NewListID");
+        System.out.println(newListID);
 
         stmt.close();
         conn.close();
