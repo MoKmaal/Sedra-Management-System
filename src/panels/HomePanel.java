@@ -9,8 +9,13 @@ import Database.Connect;
 import Database.HomeData;
 import Database.Login;
 import Database.StoreData;
+import invoice.WriteDOCX;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -18,6 +23,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
@@ -26,6 +33,10 @@ import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.XmlException;
 import sedra.Colors;
 import sedra.SedraUI;
 import static sedra.SedraUI.height;
@@ -42,6 +53,7 @@ public class HomePanel extends javax.swing.JPanel {
     /**
      * Creates new form HomePanel
      */
+    float lastTotalss;
     JComboBox<String> jcb;
     JCheckBox checkBox;
     DefaultTableModel model;
@@ -51,6 +63,7 @@ public class HomePanel extends javax.swing.JPanel {
     Object[] vec;
     float getremain, getpaid;
     private String selectedType;
+    int totalPrice = 0;
 
     public void updatePanel() {
 
@@ -421,6 +434,10 @@ public class HomePanel extends javax.swing.JPanel {
 
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "Unable to create order " + ex.getMessage());
+                } catch (IOException ex) {
+                    Logger.getLogger(HomePanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (XmlException ex) {
+                    Logger.getLogger(HomePanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 submit.setEnabled(false);
             } else {
@@ -438,7 +455,9 @@ public class HomePanel extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_submitActionPerformed
-    private void printInvoiceData(int recID, String name) {
+    private void printInvoiceData(int recID, String name) throws IOException, XmlException {
+        WriteDOCX cX = new WriteDOCX();
+
         try {
             Connection conn = DriverManager.getConnection(Connect.URL, Connect.HOST_NAME, Connect.PASSWORD);
 
@@ -468,13 +487,24 @@ public class HomePanel extends javax.swing.JPanel {
 
             }
 
-            int totalPrice = 0;
+            totalPrice = 0;
             int invoiceIndex = 0;
             conn = DriverManager.getConnection(Connect.URL, Connect.HOST_NAME, Connect.PASSWORD);
 
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
             ResultSet rs = stmt.executeQuery(printInvoiceQuery);
+            InputStream inputStream = new FileInputStream(new File("temp.docx"));
+            XWPFDocument document = new XWPFDocument(inputStream);
+            XWPFTable table = document.getTables().get(0);
+
+//            //create first row
+//            XWPFTableRow tableRowOne = table.getRow(0);
+//            tableRowOne.getCell(0).setText("Name");
+//            tableRowOne.addNewTableCell().setText("Size");
+//            tableRowOne.addNewTableCell().setText("Quantity");
+//            tableRowOne.addNewTableCell().setText("Price");
+//            tableRowOne.addNewTableCell().setText("Total");
 
             rs.beforeFirst();
             while (rs.next()) {
@@ -486,6 +516,12 @@ public class HomePanel extends javax.swing.JPanel {
                 String s6 = rs.getString(6);
                 String s22 = rs.getString(7);
                 Object data[] = {"", "", "", s0, s6, s1, s22, s3};
+                XWPFTableRow tableRowTwo = table.createRow();
+                tableRowTwo.getCell(0).setText(s0);
+                tableRowTwo.getCell(1).setText(s6);
+                tableRowTwo.getCell(2).setText(s1);
+                tableRowTwo.getCell(3).setText(s22);
+                tableRowTwo.getCell(4).setText(s3);
 
                 dtm = (DefaultTableModel) invoicetable.getModel();
 
@@ -497,6 +533,9 @@ public class HomePanel extends javax.swing.JPanel {
             invoicetable.setValueAt(rs.getString(5), 0, 0);
             invoicetable.setValueAt(rs.getString(4), 0, 1);
             invoicetable.setValueAt(recID, 0, 2);
+            cX.setDate(rs.getDate(5));
+            cX.setId(rs.getString(4));
+            cX.setInvoiceID(String.valueOf(recID));
             ReceiptPanel.resultsTable.setValueAt("Total", 0, 0);
 
             ReceiptPanel.resultsTable.setValueAt(totalPrice, 0, 1);
@@ -507,12 +546,26 @@ public class HomePanel extends javax.swing.JPanel {
                 ReceiptPanel.resultsTable.setValueAt(s, 1, 1);
                 int afterdisc = Integer.parseInt(s.replace("%", ""));
                 float lastTotal = totalPrice - (totalPrice * afterdisc * 1.0f / 100f);
+                lastTotalss = lastTotal;
                 ReceiptPanel.resultsTable.setValueAt("Price ", 2, 0);
                 ReceiptPanel.resultsTable.setValueAt(lastTotal, 2, 1);
 
             }
+            XWPFTableRow tableRowTwo = table.createRow();
+            tableRowTwo.getCell(3).setText("Sub Total");
+            tableRowTwo.getCell(4).setText(totalPrice + "");
+            XWPFTableRow tableRowTwos = table.createRow();
+            tableRowTwos.getCell(3).setText("Discount");
+            tableRowTwos.getCell(4).setText((totalPrice * Integer.parseInt(customerDiscount.getSelectedItem().toString().replace("%", "")) * 1.0f / 100f) + "");
+            XWPFTableRow tableRowTwoss = table.createRow();
+            tableRowTwoss.getCell(3).setText("Total");
+            tableRowTwo.getCell(4).setText(lastTotalss + "");
+
             SedraUI.visibility(false, true, false, false, false, false, false, false, false);
             ReceiptPanel.setCustomerName(name);
+            cX.setDocument(document);
+            ReceiptPanel.getCX(cX);
+
             JOptionPane.showMessageDialog(this, "DONE");
             customerDiscount.setSelectedIndex(0);
 
@@ -613,23 +666,23 @@ public class HomePanel extends javax.swing.JPanel {
             }
         }
         /*
-        if (x == false) {
+         if (x == false) {
 
-            for (int i = 0; i < StoreData.listCustomerPrice.size(); i++) {
-                Object[] row = {"", "",
-                    StoreData.listID.get(i),
-                    StoreData.listSize.get(i),
-                    StoreData.listQuantity.get(i),
-                    StoreData.listDocPrice.get(i),
-                    StoreData.listCustomerPrice.get(i)
-                };
-                model = (DefaultTableModel) jTable1.getModel();
-                model.addRow(row);
-                if (Integer.parseInt(StoreData.listQuantity.get(i)) < 10) {
-                    warning.addItem(StoreData.listID.get(i));
-                }
-            }
-        }
+         for (int i = 0; i < StoreData.listCustomerPrice.size(); i++) {
+         Object[] row = {"", "",
+         StoreData.listID.get(i),
+         StoreData.listSize.get(i),
+         StoreData.listQuantity.get(i),
+         StoreData.listDocPrice.get(i),
+         StoreData.listCustomerPrice.get(i)
+         };
+         model = (DefaultTableModel) jTable1.getModel();
+         model.addRow(row);
+         if (Integer.parseInt(StoreData.listQuantity.get(i)) < 10) {
+         warning.addItem(StoreData.listID.get(i));
+         }
+         }
+         }
          */
 
     }

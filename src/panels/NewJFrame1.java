@@ -43,14 +43,14 @@ public class NewJFrame1 extends javax.swing.JFrame {
         ResultSet rs = stmt.executeQuery("SELECT * FROM Report WHERE time LIKE '" + date + "'");
         Statement stmt1 = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         Statement stmt2 = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        
+
         while (rs.next()) {
-            
+
             System.out.println("print");
             String s0 = rs.getString(2);
             String s1 = rs.getString(3);
             String s2 = rs.getString(4);
-            
+
             ResultSet res = stmt1.executeQuery("SELECT SUM(salesQuantity),SUM(salesPaid) FROM Sales WHERE itemID= '" + s0 + "' AND Size='" + s1 + "'");
             res.next();
             String s3 = res.getString(1);
@@ -78,11 +78,15 @@ public class NewJFrame1 extends javax.swing.JFrame {
                     }
                 }
                 String s4 = String.valueOf(temp);
-                ResultSet result = stmt2.executeQuery("SELECT itemDocPrice,itemQuantity,buyPrice FROM Store WHERE itemID= '" + s0 + "' AND itemSize='" + s1 + "'");
+                ResultSet result = stmt2.executeQuery("SELECT itemDocPrice,itemQuantity,buyPrice,itemCustomerPrice FROM Store WHERE itemID= '" + s0 + "' AND itemSize='" + s1 + "'");
                 result.next();
-                
+
                 System.out.println("result next");
                 int pricePaid = Integer.parseInt(result.getString(1));
+                if (pricePaid == 0) {
+                    pricePaid = Integer.parseInt(result.getString(4));
+
+                }
                 int buyPrice = Integer.parseInt(result.getString("buyPrice"));
                 int totalStoreQuantity = Integer.parseInt(result.getString(2));
                 String s5 = String.valueOf(buyPrice * Integer.parseInt(s4));
@@ -90,62 +94,62 @@ public class NewJFrame1 extends javax.swing.JFrame {
                 Statement stmt3 = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
                 ResultSet result3 = stmt3.executeQuery("SELECT itemQuantity FROM Store WHERE itemID= '" + s0 + "' AND itemSize='" + s1 + "'");
                 String s8 = String.valueOf(Integer.parseInt(s4) - Integer.parseInt(s3) + Integer.parseInt(s2));
-                
+
                 if (result3.next()) {
                     s8 = result3.getString(1);
                 }
                 try {
                     totals2 += Integer.parseInt(s2);
                 } catch (Exception e) {
-                    
+
                 }
                 try {
-                    
+
                     totals3 += Integer.parseInt(s3);
                 } catch (Exception e) {
-                    
+
                 }
                 try {
-                    
+
                     totals4 += Integer.parseInt(s4);
                 } catch (Exception e) {
-                    
+
                 }
                 try {
-                    
+
                     totals5 += Integer.parseInt(s5);
                 } catch (Exception e) {
-                    
+
                 }
                 try {
-                    
+
                     totals6 += Integer.parseInt(s6);
                 } catch (Exception e) {
-                    
+
                 }
                 try {
-                    
+
                     totals7 += Integer.parseInt(s7);
                 } catch (Exception e) {
-                    
+
                 }
                 try {
-                    
+
                     totals8 += Integer.parseInt(s8);
                 } catch (Exception e) {
-                    
+
                 }
-                
+
                 Object data[] = {s7, s6, s5, s4, s3, s2, s1, s0, s8};
-                
+
                 defaultTableModel.addRow(data);
-                
+
             }
-            
+
         }
         Object data[] = {totals7, totals6, totals5, totals4, totals3, totals2, "", "", totals8};
         defaultTableModel.addRow(data);
-        
+
         stmt.close();
         conn.close();
         float temp = 0;
@@ -171,7 +175,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
                     temp += Float.parseFloat(arr[1]);
                 }
             }
-            
+
         }
         jLabel1.setText(temp + "اجمالى ايرادات الشهر ");
     }

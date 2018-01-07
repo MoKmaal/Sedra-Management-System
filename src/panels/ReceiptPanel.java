@@ -7,11 +7,13 @@ package panels;
 
 import Database.Connect;
 import Print.Printer;
+import invoice.WriteDOCX;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -19,6 +21,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import org.apache.xmlbeans.XmlException;
 import sedra.Colors;
 import static sedra.SedraUI.height;
 import static sedra.SedraUI.width;
@@ -34,7 +37,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
      *
      * @param customerNamef
      */
-    public static void setCustomerName(String customerName) throws SQLException {
+    public static void setCustomerName(String customerName) throws SQLException, IOException, XmlException {
         nameRec.setHorizontalAlignment(SwingConstants.RIGHT);
         nameRec.setText(customerName);
         PhoneRec.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -56,6 +59,16 @@ public class ReceiptPanel extends javax.swing.JPanel {
             email.setText("");
 
         }
+
+    }
+
+    public  static void getCX(WriteDOCX cX) throws IOException, XmlException {
+        cX.setName(nameRec.getText());
+        cX.setNumber(String.valueOf(PhoneRec.getText()));
+        cX.setAddress(AddrRec.getText());
+        cX.setEmail(email.getText());
+        cX.createInvoce();
+
     }
 
     public ReceiptPanel() {
@@ -67,8 +80,8 @@ public class ReceiptPanel extends javax.swing.JPanel {
         recPanel.setBounds(0, height / 4, 3 * width / 4, 3 * height / 4);
         jScrollPane3.setBounds(0, height / 4, (3 * width / 4) - 5, (3 * height / 4) - 470);
         invoicetable.setBounds((15 * width / 32) - 5, 500, (3 * width / 4) - 5, 700);
-        jScrollPane4.setBounds((3 * width / 4) * 6 / 8, (height / 4) + ((3 * height / 4) - 470)-5, (3 * width / 4) * 2 / 8, 115);
-        resultsTable.setBounds((3 * width / 4) * 6 / 8, (height / 4) + ((3 * height / 4) - 470)-5, (3 * width / 4) * 2 / 8, 115);
+        jScrollPane4.setBounds((3 * width / 4) * 6 / 8, (height / 4) + ((3 * height / 4) - 470) - 5, (3 * width / 4) * 2 / 8, 115);
+        resultsTable.setBounds((3 * width / 4) * 6 / 8, (height / 4) + ((3 * height / 4) - 470) - 5, (3 * width / 4) * 2 / 8, 115);
 
         slogan.setBounds(0, 700, (3 * width / 4) - 5, 20);
         dots.setBounds(50, 730, (3 * width / 4) - 5, 20);
@@ -166,7 +179,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
         );
 
         homePanel.add(jPanel2);
-        jPanel2.setBounds(0, 0, 760, 150);
+        jPanel2.setBounds(0, 0, 769, 150);
 
         recPanel.setBackground(Colors.PANELS_COLOR);
         recPanel.setLayout(null);
@@ -329,7 +342,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
             resultsTable.setValueAt("", 1, 1);
             resultsTable.setValueAt("", 2, 0);
             resultsTable.setValueAt("", 2, 1);
-            
+
         } catch (PrinterException ex) {
             JOptionPane.showMessageDialog(this, "Unable to print " + ex.getMessage());
         }

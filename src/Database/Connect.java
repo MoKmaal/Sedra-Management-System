@@ -24,7 +24,7 @@ public class Connect {
     //public static final String HOST_NAME = "sql11192233";
     public static final String HOST_NAME = "root";
     //public static final String PASSWORD = "61NUHhELp6";
-    public static final String PASSWORD = "ahmedragab";
+    public static final String PASSWORD = "12345678";
     static Connection conn;
     static Statement stmt;
 
