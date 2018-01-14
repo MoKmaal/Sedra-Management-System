@@ -20,11 +20,11 @@ public class Connect {
 
     static String unicode = "?useUnicode=yes&characterEncoding=UTF-8";
     //public static final String URL = "jdbc:mysql://sql11.freemysqlhosting.net/sql11192233" + unicode;
-    public static final String URL = "jdbc:mysql://localhost/sedra" + unicode;
+    public static final String URL = "jdbc:mysql://localhost/sedras" + unicode;
     //public static final String HOST_NAME = "sql11192233";
     public static final String HOST_NAME = "root";
     //public static final String PASSWORD = "61NUHhELp6";
-    public static final String PASSWORD = "12345678";
+    public static final String PASSWORD = "ahmedragab";
     static Connection conn;
     static Statement stmt;
 

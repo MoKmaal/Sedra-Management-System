@@ -196,8 +196,8 @@ public class NewJFrame1 extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(Colors.HEAD_COLOR);
 
-        report.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        report.setForeground(Colors.LABELS_COLOR);
+        report.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        report.setForeground(new java.awt.Color(1, 1, 1));
         report.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -214,6 +214,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        report.setRowHeight(40);
         jScrollPane4.setViewportView(report);
         if (report.getColumnModel().getColumnCount() > 0) {
             report.getColumnModel().getColumn(7).setResizable(false);

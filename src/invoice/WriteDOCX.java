@@ -1,7 +1,10 @@
 package invoice;
 
+import com.itextpdf.text.DocumentException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +56,7 @@ public class WriteDOCX {
     }
     private String invoiceID;
 
-    public void createInvoce() throws IOException, XmlException {
+    public void createInvoce() throws IOException, XmlException, FileNotFoundException, DocumentException {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         document.write(b); // doc should be a XWPFDocument 
         InputStream inputStream = new ByteArrayInputStream(b.toByteArray());
@@ -62,23 +65,77 @@ public class WriteDOCX {
         CTSectPr sectPr = docx.getDocument().getBody().addNewSectPr();
         XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(docx, sectPr);
 
-        //write header content
+        //name
         CTP ctpHeader = CTP.Factory.newInstance();
         CTR ctrHeader = ctpHeader.addNewR();
         CTText ctHeader = ctrHeader.addNewT();
-
+        //phone
         CTP ctpHeader1 = CTP.Factory.newInstance();
         CTR ctrHeader1 = ctpHeader1.addNewR();
         CTText ctHeader1 = ctrHeader1.addNewT();
-        ctHeader1.setStringValue(id + "\n" + invoiceID + "\n" + date);
-        ctHeader.setStringValue(name + "\n" + email + "\n" + number + "\n" + address + "\n");
+
+        //address
+        CTP ctpHeader2 = CTP.Factory.newInstance();
+        CTR ctrHeader2 = ctpHeader2.addNewR();
+        CTText ctHeader2 = ctrHeader2.addNewT();
+
+        //email
+        CTP ctpHeader4 = CTP.Factory.newInstance();
+        CTR ctrHeader4 = ctpHeader4.addNewR();
+        CTText ctHeader4 = ctrHeader4.addNewT();
+        //customer ID
+        CTP ctpHeader5 = CTP.Factory.newInstance();
+        CTR ctrHeader5 = ctpHeader5.addNewR();
+        CTText ctHeader5 = ctrHeader5.addNewT();
+
+        //invoice id
+        CTP ctpHeader6 = CTP.Factory.newInstance();
+        CTR ctrHeader6 = ctpHeader6.addNewR();
+        CTText ctHeader6 = ctrHeader6.addNewT();
+
+        //date of day
+        CTP ctpHeader7 = CTP.Factory.newInstance();
+        CTR ctrHeader7 = ctpHeader7.addNewR();
+        CTText ctHeader7 = ctrHeader7.addNewT();
+
+        ctHeader.setStringValue(name);
+
+        ctHeader1.setStringValue(number);
+        ctHeader2.setStringValue(address);
+        ctHeader4.setStringValue(email);
+        ctHeader5.setStringValue("Employee ID: " + id);
+        ctHeader6.setStringValue("Invoice ID: " + invoiceID);
+        ctHeader7.setStringValue("" + date);
+
         XWPFParagraph headerParagraph = new XWPFParagraph(ctpHeader, docx);
-        headerParagraph.setAlignment(ParagraphAlignment.RIGHT);
+        headerParagraph.setAlignment(ParagraphAlignment.LEFT);
+
         XWPFParagraph headerParagraph1 = new XWPFParagraph(ctpHeader1, docx);
-        headerParagraph1.setAlignment(ParagraphAlignment.CENTER);
-        XWPFParagraph[] parsHeader = new XWPFParagraph[2];
+        headerParagraph1.setAlignment(ParagraphAlignment.LEFT);
+
+        XWPFParagraph headerParagraph2 = new XWPFParagraph(ctpHeader2, docx);
+        headerParagraph2.setAlignment(ParagraphAlignment.LEFT);
+
+        XWPFParagraph headerParagraph3 = new XWPFParagraph(ctpHeader4, docx);
+        headerParagraph3.setAlignment(ParagraphAlignment.LEFT);
+
+        XWPFParagraph headerParagraph4 = new XWPFParagraph(ctpHeader5, docx);
+        headerParagraph4.setAlignment(ParagraphAlignment.CENTER);
+
+        XWPFParagraph headerParagraph5 = new XWPFParagraph(ctpHeader6, docx);
+        headerParagraph5.setAlignment(ParagraphAlignment.CENTER);
+
+        XWPFParagraph headerParagraph6 = new XWPFParagraph(ctpHeader7, docx);
+        headerParagraph6.setAlignment(ParagraphAlignment.CENTER);
+
+        XWPFParagraph[] parsHeader = new XWPFParagraph[7];
         parsHeader[0] = headerParagraph;
         parsHeader[1] = headerParagraph1;
+        parsHeader[2] = headerParagraph2;
+        parsHeader[3] = headerParagraph3;
+        parsHeader[4] = headerParagraph4;
+        parsHeader[5] = headerParagraph5;
+        parsHeader[6] = headerParagraph6;
         policy.createHeader(XWPFHeaderFooterPolicy.DEFAULT, parsHeader);
 
         //write footer content
@@ -103,6 +160,25 @@ public class WriteDOCX {
         out.close();
         System.out.println("Done");
 
+        File archive = new File("Archive");
+        if (!archive.isDirectory()) {
+            archive.mkdir();
+        }
+        File archiveName = new File("Archive/" + name);
+        if (!archiveName.isDirectory()) {
+            archiveName.mkdir();
+        }
+        File archiveNameDate;
+
+        archiveNameDate = new File("Archive/" + name + "/" + date + "_" + Math.random() + ".docx");
+        if (!archiveNameDate.exists()) {
+            FileOutputStream outArchive = new FileOutputStream(archiveNameDate);
+
+            docx.write(outArchive);
+
+        }
+
+        // AddImageAbsolutePosition.add();
     }
 
     public String getName() {

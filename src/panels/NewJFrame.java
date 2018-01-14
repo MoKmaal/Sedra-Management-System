@@ -94,9 +94,8 @@ public class NewJFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        payment.setBackground(new java.awt.Color(255, 255, 255));
-        payment.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        payment.setForeground(Colors.LABELS_COLOR);
+        payment.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        payment.setForeground(new java.awt.Color(1, 1, 1));
         payment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -113,11 +112,11 @@ public class NewJFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        payment.setRowHeight(40);
         jScrollPane3.setViewportView(payment);
 
-        retrieve.setBackground(new java.awt.Color(255, 255, 255));
-        retrieve.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        retrieve.setForeground(Colors.LABELS_COLOR);
+        retrieve.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        retrieve.setForeground(new java.awt.Color(1, 1, 1));
         retrieve.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -134,6 +133,7 @@ public class NewJFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        retrieve.setRowHeight(40);
         jScrollPane4.setViewportView(retrieve);
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N

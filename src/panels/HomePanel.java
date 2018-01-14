@@ -9,11 +9,13 @@ import Database.Connect;
 import Database.HomeData;
 import Database.Login;
 import Database.StoreData;
+import com.itextpdf.text.DocumentException;
 import invoice.WriteDOCX;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -35,6 +37,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlException;
 import sedra.Colors;
@@ -53,7 +56,7 @@ public class HomePanel extends javax.swing.JPanel {
     /**
      * Creates new form HomePanel
      */
-    float lastTotalss;
+    float lastTotalss = -1;
     JComboBox<String> jcb;
     JCheckBox checkBox;
     DefaultTableModel model;
@@ -64,6 +67,7 @@ public class HomePanel extends javax.swing.JPanel {
     float getremain, getpaid;
     private String selectedType;
     int totalPrice = 0;
+    private double discount = 0;
 
     public void updatePanel() {
 
@@ -108,13 +112,13 @@ public class HomePanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         searchItemfield = new javax.swing.JTextField();
-        warning = new javax.swing.JComboBox<>();
+        warning = new javax.swing.JComboBox<String>();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         dataPane = new javax.swing.JPanel();
-        customerTypeCombo = new javax.swing.JComboBox<>();
-        customerNameIDCombo = new javax.swing.JComboBox<>();
+        customerTypeCombo = new javax.swing.JComboBox<String>();
+        customerNameIDCombo = new javax.swing.JComboBox<String>();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -122,8 +126,8 @@ public class HomePanel extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         customerRemain = new javax.swing.JTextField();
         submit = new javax.swing.JButton();
-        customerDiscount = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
+        customerDiscount = new javax.swing.JTextField();
 
         setLayout(null);
 
@@ -153,7 +157,7 @@ public class HomePanel extends javax.swing.JPanel {
 
         warning.setBackground(Color.RED);
         warning.setForeground(new java.awt.Color(64, 43, 100));
-        warning.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        warning.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         warning.setBorder(null);
         warning.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
         warning.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
@@ -198,7 +202,7 @@ public class HomePanel extends javax.swing.JPanel {
         );
 
         homePanel.add(jPanel2);
-        jPanel2.setBounds(0, 0, 768, 150);
+        jPanel2.setBounds(0, 0, 771, 150);
 
         jScrollPane1.setBorder(null);
 
@@ -244,7 +248,7 @@ public class HomePanel extends javax.swing.JPanel {
 
         customerTypeCombo.setBackground(Colors.FIELDS_COLOR);
         customerTypeCombo.setForeground(new java.awt.Color(64, 43, 100));
-        customerTypeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "Doctor", "Customer" }));
+        customerTypeCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "Doctor", "Customer" }));
         customerTypeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 customerTypeComboActionPerformed(evt);
@@ -253,7 +257,7 @@ public class HomePanel extends javax.swing.JPanel {
 
         customerNameIDCombo.setBackground(Colors.FIELDS_COLOR);
         customerNameIDCombo.setForeground(new java.awt.Color(64, 43, 100));
-        customerNameIDCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        customerNameIDCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         customerNameIDCombo.setBorder(null);
         customerNameIDCombo.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
         customerNameIDCombo.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
@@ -294,13 +298,6 @@ public class HomePanel extends javax.swing.JPanel {
             }
         });
 
-        customerDiscount.setBackground(Colors.FIELDS_COLOR);
-        customerDiscount.setForeground(new java.awt.Color(64, 43, 100));
-        customerDiscount.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0%", "1%", "2%", "3%", "4%", "5%", "6%", "7%", "8%", "9%", "10%", "11%", "12%", "13%", "14%", "15%", "16%", "17%", "18%", "19%", "20%", "21%", "22%", "23%", "24%", "25%", "26%", "27%", "28%", "29%", "30%" }));
-        customerDiscount.setBorder(null);
-        customerDiscount.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
-        customerDiscount.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
-
         jLabel7.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel7.setForeground(Colors.LABELS_COLOR);
         jLabel7.setText("Discount");
@@ -331,12 +328,13 @@ public class HomePanel extends javax.swing.JPanel {
                         .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(customerDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(submit, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(dataPaneLayout.createSequentialGroup()
                         .addGap(19, 19, 19)
-                        .addComponent(jLabel7))
-                    .addComponent(submit, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(customerDiscount)
+                            .addComponent(jLabel7))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         dataPaneLayout.setVerticalGroup(
@@ -349,9 +347,10 @@ public class HomePanel extends javax.swing.JPanel {
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(customerTypeCombo)
-                    .addComponent(customerDiscount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(customerNameIDCombo, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(customerDiscount, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(customerTypeCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                        .addComponent(customerNameIDCombo, javax.swing.GroupLayout.Alignment.TRAILING)))
                 .addGap(18, 18, 18)
                 .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -362,11 +361,11 @@ public class HomePanel extends javax.swing.JPanel {
                     .addGroup(dataPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(customerRemain, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(customerPaidField, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         homePanel.add(dataPane);
-        dataPane.setBounds(0, 170, 756, 190);
+        dataPane.setBounds(0, 170, 768, 190);
 
         add(homePanel);
         homePanel.setBounds(0, 6, 832, 580);
@@ -405,6 +404,8 @@ public class HomePanel extends javax.swing.JPanel {
 
 
     private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
+        //    jTable1.getCellEditor().stopCellEditing();
+
         int sure = JOptionPane.showConfirmDialog(this, "من فضلك تاكد من ادخال رقم 0 فى خانة ال payment بعد التاكد من اختيار جميع الاكواد ، ان كنت متاكد اضغط Yes");
 
         if (HomePanel.dtm != null) {
@@ -438,6 +439,8 @@ public class HomePanel extends javax.swing.JPanel {
                     Logger.getLogger(HomePanel.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (XmlException ex) {
                     Logger.getLogger(HomePanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (DocumentException ex) {
+                    Logger.getLogger(HomePanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 submit.setEnabled(false);
             } else {
@@ -455,7 +458,7 @@ public class HomePanel extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_submitActionPerformed
-    private void printInvoiceData(int recID, String name) throws IOException, XmlException {
+    private void printInvoiceData(int recID, String name) throws IOException, XmlException, FileNotFoundException, DocumentException {
         WriteDOCX cX = new WriteDOCX();
 
         try {
@@ -505,7 +508,6 @@ public class HomePanel extends javax.swing.JPanel {
 //            tableRowOne.addNewTableCell().setText("Quantity");
 //            tableRowOne.addNewTableCell().setText("Price");
 //            tableRowOne.addNewTableCell().setText("Total");
-
             rs.beforeFirst();
             while (rs.next()) {
                 invoiceIndex++;
@@ -517,11 +519,17 @@ public class HomePanel extends javax.swing.JPanel {
                 String s22 = rs.getString(7);
                 Object data[] = {"", "", "", s0, s6, s1, s22, s3};
                 XWPFTableRow tableRowTwo = table.createRow();
+
+                tableRowTwo.getCell(0).setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
                 tableRowTwo.getCell(0).setText(s0);
                 tableRowTwo.getCell(1).setText(s6);
+                tableRowTwo.getCell(1).setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
                 tableRowTwo.getCell(2).setText(s1);
+                tableRowTwo.getCell(2).setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
                 tableRowTwo.getCell(3).setText(s22);
+                tableRowTwo.getCell(3).setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
                 tableRowTwo.getCell(4).setText(s3);
+                tableRowTwo.getCell(4).setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
 
                 dtm = (DefaultTableModel) invoicetable.getModel();
 
@@ -535,39 +543,60 @@ public class HomePanel extends javax.swing.JPanel {
             invoicetable.setValueAt(recID, 0, 2);
             cX.setDate(rs.getDate(5));
             cX.setId(rs.getString(4));
+
             cX.setInvoiceID(String.valueOf(recID));
             ReceiptPanel.resultsTable.setValueAt("Total", 0, 0);
 
             ReceiptPanel.resultsTable.setValueAt(totalPrice, 0, 1);
-            if (customerDiscount.getSelectedIndex() != 0) {
+            System.out.println(totalPrice);
+
+            if (!customerDiscount.getText().equals("")) {
 
                 ReceiptPanel.resultsTable.setValueAt("Discount", 1, 0);
-                String s = customerDiscount.getSelectedItem().toString();
+                String s = customerDiscount.getText();
                 ReceiptPanel.resultsTable.setValueAt(s, 1, 1);
-                int afterdisc = Integer.parseInt(s.replace("%", ""));
-                float lastTotal = totalPrice - (totalPrice * afterdisc * 1.0f / 100f);
+                double afterdisc = Double.parseDouble(s);
+                float lastTotal = totalPrice - (float)(afterdisc);
                 lastTotalss = lastTotal;
                 ReceiptPanel.resultsTable.setValueAt("Price ", 2, 0);
                 ReceiptPanel.resultsTable.setValueAt(lastTotal, 2, 1);
 
             }
+
             XWPFTableRow tableRowTwo = table.createRow();
             tableRowTwo.getCell(3).setText("Sub Total");
+            tableRowTwo.getCell(3).setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+            System.out.println(totalPrice);
             tableRowTwo.getCell(4).setText(totalPrice + "");
+            System.out.println(totalPrice);
+
+            tableRowTwo.getCell(4).setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
             XWPFTableRow tableRowTwos = table.createRow();
             tableRowTwos.getCell(3).setText("Discount");
-            tableRowTwos.getCell(4).setText((totalPrice * Integer.parseInt(customerDiscount.getSelectedItem().toString().replace("%", "")) * 1.0f / 100f) + "");
+            tableRowTwos.getCell(3).setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+            if (!customerDiscount.getText().equals("")) {
+                tableRowTwos.getCell(4).setText((Double.parseDouble(customerDiscount.getText())) + "");
+            } else {
+                tableRowTwos.getCell(4).setText("");
+
+            }
+            tableRowTwos.getCell(4).setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
             XWPFTableRow tableRowTwoss = table.createRow();
             tableRowTwoss.getCell(3).setText("Total");
-            tableRowTwo.getCell(4).setText(lastTotalss + "");
-
+            tableRowTwoss.getCell(3).setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+            if (lastTotalss == -1) {
+                lastTotalss = totalPrice;
+            }
+            tableRowTwoss.getCell(4).setText(lastTotalss + "");
+            tableRowTwoss.getCell(4).setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+            lastTotalss = -1;
             SedraUI.visibility(false, true, false, false, false, false, false, false, false);
             ReceiptPanel.setCustomerName(name);
             cX.setDocument(document);
             ReceiptPanel.getCX(cX);
 
             JOptionPane.showMessageDialog(this, "DONE");
-            customerDiscount.setSelectedIndex(0);
+            customerDiscount.setText("");
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unable to print invoice " + ex.getMessage());
@@ -593,7 +622,7 @@ public class HomePanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
-    public static javax.swing.JComboBox<String> customerDiscount;
+    private javax.swing.JTextField customerDiscount;
     public static javax.swing.JComboBox<String> customerNameIDCombo;
     private javax.swing.JTextField customerPaidField;
     private javax.swing.JTextField customerRemain;
@@ -737,14 +766,14 @@ public class HomePanel extends javax.swing.JPanel {
                                             + ",'" + jTable1.getValueAt(i, 2).toString() + "','" + jTable1.getValueAt(i, 3).toString() + "',"
                                             + Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))
                                             + "," + (Integer.parseInt((String) jTable1.getValueAt(i, 6))
-                                            * Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))) + ",'" + customerDiscount.getSelectedItem().toString() + "')";
+                                            * Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))) + ",'" + customerDiscount.getText() + "')";
                                 } else {
                                     insertIntoSalesTableQuery = "Insert into Sales (recID,customerID,employeeID,itemID,Size,salesQuantity,salesPaid,paymentType) Values ("
                                             + recID + "," + id + "," + Login.empID
                                             + ",'" + jTable1.getValueAt(i, 2).toString() + "','" + jTable1.getValueAt(i, 3).toString() + "',"
                                             + Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))
                                             + "," + (Integer.parseInt((String) jTable1.getValueAt(i, 5))
-                                            * Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))) + ",'" + customerDiscount.getSelectedItem().toString() + "')";
+                                            * Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))) + ",'" + customerDiscount.getText() + "')";
 
                                 }
                             } else if (getpaid == 0) {
@@ -752,14 +781,14 @@ public class HomePanel extends javax.swing.JPanel {
                                         + recID + "," + id + "," + Login.empID
                                         + ",'" + jTable1.getValueAt(i, 2).toString() + "','" + jTable1.getValueAt(i, 3).toString() + "',"
                                         + Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))
-                                        + "," + Integer.parseInt("0") + ",'" + customerDiscount.getSelectedItem().toString() + "')";
+                                        + "," + Integer.parseInt("0") + ",'" + customerDiscount.getText() + "')";
 
                             } else {
                                 insertIntoSalesTableQuery = "Insert into Sales (recID,customerID,employeeID,itemID,Size,salesQuantity,salesPaid,paymentType) Values ("
                                         + recID + "," + id + "," + Login.empID
                                         + ",'" + jTable1.getValueAt(i, 2).toString() + "','" + jTable1.getValueAt(i, 3).toString() + "',"
                                         + Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)))
-                                        + "," + Integer.parseInt("0") + ",'" + customerDiscount.getSelectedItem().toString() + "')";
+                                        + "," + Integer.parseInt("0") + ",'" + customerDiscount.getText() + "')";
                             }
                         } catch (NumberFormatException ex) {
                             continue;
@@ -770,17 +799,28 @@ public class HomePanel extends javax.swing.JPanel {
 
                         stmt.executeUpdate(insertIntoSalesTableQuery);
 
-                        ResultSet res = stmt.executeQuery("Select customerDebtPayable from Customer where customerID= " + id);
+                        ResultSet res = stmt.executeQuery("Select customerDebtPayable,discount from Customer where customerID= " + id);
                         pay = 0;
                         res.next();
                         pay = res.getFloat("customerDebtPayable");
                         int current = Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 4)));
                         int buy = Integer.parseInt(String.valueOf(jTable1.getValueAt(i, 1)));
-                        int afterdisc = Integer.parseInt(customerDiscount.getSelectedItem().toString().replace("%", ""));
-                        float lastTotal = Float.parseFloat(customerRemain.getText()) - (Float.parseFloat(customerRemain.getText()) * afterdisc / 100);
+                        double afterdisc = 0;
+                        float lastTotal;
+                        if (!customerDiscount.getText().equals("")) {
+                            afterdisc = Double.parseDouble(customerDiscount.getText());
+                            lastTotal = Float.parseFloat(customerRemain.getText()) - (float) (afterdisc);
+
+                        } else {
+                            lastTotal = Float.parseFloat(customerRemain.getText());
+                        }
 
                         pay += lastTotal;
-
+                        discount = res.getDouble("discount");
+                        if(!customerDiscount.getText().equals(""))
+                        {
+                        discount += Double.parseDouble(customerDiscount.getText());
+                        }
                         stmt.executeUpdate("Update Store set itemQuantity=" + (current - buy) + " where itemSize='" + jTable1.getValueAt(i, 3) + "'"
                                 + "AND itemID='" + jTable1.getValueAt(i, 2) + "'");
 
@@ -793,8 +833,8 @@ public class HomePanel extends javax.swing.JPanel {
 
             }
             stmt.executeUpdate(" UPDATE Customer\n"
-                    + "SET customerDebtPayable =" + pay
-                    + "WHERE customerID =" + id);
+                    + "SET customerDebtPayable =" + pay + ", discount =" + discount
+                    + " WHERE customerID =" + id);
 
         }
         stmt.close();

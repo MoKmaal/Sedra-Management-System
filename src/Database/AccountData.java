@@ -30,6 +30,7 @@ public class AccountData {
     static Connection conn;
     static Statement stmt;
     static DefaultTableModel dtm;
+    private static int totalItems=0;
 
     public static HashMap getCustomerData(String name) throws SQLException {
         try {
@@ -52,6 +53,7 @@ public class AccountData {
             accountMap.put("customerAddress", res.getString("customerAddress"));
             accountMap.put("customerDebtPayable", res.getString("customerDebtPayable"));
             accountMap.put("customerPhone", res.getString("customerPhone"));
+            accountMap.put("discount", res.getDouble("discount"));
         }
         return accountMap;
     }
@@ -90,7 +92,7 @@ public class AccountData {
         if (getCustomerType(customerName).equalsIgnoreCase("Doctor")) {
             printInvoiceQuery = "SELECT Sales.itemID,Sales.salesQuantity,"
                     + "(Store.itemDocPrice*Sales.salesQuantity)AS price,Sales.employeeID,"
-                    + "Sales.orderTime,Sales.recID,Sales.Size FROM `Sales`,Store WHERE Store.itemID=Sales.itemID AND"
+                    + "Sales.orderTime,Sales.recID,Sales.Size,Sales.salesPaid FROM `Sales`,Store WHERE Store.itemID=Sales.itemID AND"
                     + " Store.itemSize = Sales.Size "
                     + " AND customerID=" + getCustomerID(customerName);
 
@@ -99,7 +101,7 @@ public class AccountData {
         } else {
             printInvoiceQuery = "SELECT Sales.itemID,Sales.salesQuantity,"
                     + "(Store.itemCustomerPrice*Sales.salesQuantity)AS price,Sales.employeeID,"
-                    + "Sales.orderTime,Sales.recID,Sales.Size FROM `Sales`,Store WHERE Store.itemID=Sales.itemID AND"
+                    + "Sales.orderTime,Sales.recID,Sales.Size,Sales.salesPaid FROM `Sales`,Store WHERE Store.itemID=Sales.itemID AND"
                     + " Store.itemSize = Sales.Size "
                     + " AND customerID=" + getCustomerID(customerName);
             rs = stmt.executeQuery(printInvoiceQuery);
@@ -128,6 +130,7 @@ public class AccountData {
             String s3 = rs.getString(3);
             String s4 = rs.getString(4);
             String s7 = rs.getString(7);
+            String s8 = rs.getString(8);
 
             if (!tempTime.equalsIgnoreCase(rs.getString(5).substring(0, 16))) {
                 s4 = rs.getString(5).substring(0, 16);
@@ -143,13 +146,12 @@ public class AccountData {
                 s5 = String.valueOf(tempID);
                 var = true;
             }
-
-            Object data[] = {s4, s5, s0, s7, s1, s3};
+            totalItems+=Integer.parseInt(s1);
+            Object data[] = {s4, s5, s0, s7, s1, s3,s8,""};
             if (!tempTime.equalsIgnoreCase(rs.getString(5).substring(0, 16))) {
-                Object data1[] = {"", "", "", "", "", ""};
+                Object data1[] = {"", "", "", "", "", "",""};
                 invoiceIndex++;
                 dtm.addRow(data1);
-                invoicetable.setBackground(Color.yellow);
 
                 tempTime = s4;
 
@@ -158,10 +160,17 @@ public class AccountData {
             dtm.addRow(data);
 
         }
+        
+        
 
         rs.first();
-        if(invoiceIndex>0)
-        allCustomerInvoices.setValueAt(totalPrice, --invoiceIndex, 6);
+                Object data1[] = {"", "", "", "", "", "",""};
+
+                    dtm.addRow(data1);
+                    invoiceIndex++;
+        allCustomerInvoices.setValueAt(totalPrice, --invoiceIndex, 7);
+        allCustomerInvoices.setValueAt(totalItems, invoiceIndex, 4);
+        totalItems=0;
     }
 
 }

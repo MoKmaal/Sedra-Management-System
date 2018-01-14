@@ -88,7 +88,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tableForSpecificData.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        tableForSpecificData.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         tableForSpecificData.setForeground(Colors.LABELS_COLOR);
         tableForSpecificData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -106,6 +106,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tableForSpecificData.setRowHeight(40);
         jScrollPane4.setViewportView(tableForSpecificData);
         if (tableForSpecificData.getColumnModel().getColumnCount() > 0) {
             tableForSpecificData.getColumnModel().getColumn(3).setResizable(false);

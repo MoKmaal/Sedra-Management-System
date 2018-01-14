@@ -7,18 +7,24 @@ package panels;
 
 import Database.Connect;
 import Print.Printer;
+import com.itextpdf.text.DocumentException;
 import invoice.WriteDOCX;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import org.apache.xmlbeans.XmlException;
@@ -62,7 +68,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
 
     }
 
-    public  static void getCX(WriteDOCX cX) throws IOException, XmlException {
+    public  static void getCX(WriteDOCX cX) throws IOException, XmlException, FileNotFoundException, DocumentException {
         cX.setName(nameRec.getText());
         cX.setNumber(String.valueOf(PhoneRec.getText()));
         cX.setAddress(AddrRec.getText());
@@ -179,7 +185,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
         );
 
         homePanel.add(jPanel2);
-        jPanel2.setBounds(0, 0, 769, 150);
+        jPanel2.setBounds(0, 0, 742, 154);
 
         recPanel.setBackground(Colors.PANELS_COLOR);
         recPanel.setLayout(null);
@@ -265,7 +271,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
         nameRec.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         nameRec.setText("Username");
         recPanel.add(nameRec);
-        nameRec.setBounds(1090, 110, 220, 22);
+        nameRec.setBounds(1090, 110, 220, 24);
 
         dots.setFont(new java.awt.Font("Cambria Math", 1, 18)); // NOI18N
         dots.setText(".....................");
@@ -286,7 +292,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
         AddrRec.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         AddrRec.setText("jLabel3");
         recPanel.add(AddrRec);
-        AddrRec.setBounds(860, 200, 450, 22);
+        AddrRec.setBounds(860, 200, 450, 24);
 
         jScrollPane4.setPreferredSize(new java.awt.Dimension(453, 350));
 
@@ -308,7 +314,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
         jScrollPane4.setBounds(0, 356, 1038, 180);
 
         homePanel.add(recPanel);
-        recPanel.setBounds(0, 150, 760, 0);
+        recPanel.setBounds(0, 150, 760, 250);
 
         add(homePanel);
         homePanel.setBounds(0, 0, 760, 580);
@@ -323,6 +329,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         try {
             // TODO add your handling code here:
+            /*
             PrinterJob pjob = PrinterJob.getPrinterJob();
             PageFormat preformat = pjob.defaultPage();
             preformat.setOrientation(PageFormat.PORTRAIT);
@@ -335,6 +342,8 @@ public class ReceiptPanel extends javax.swing.JPanel {
                     pjob.print();
                 }
             }
+*/
+            Desktop.getDesktop().print(new File("generated.docx"));
             HomePanel.dtm.setRowCount(0);
             resultsTable.setValueAt("", 0, 0);
             resultsTable.setValueAt("", 0, 1);
@@ -343,7 +352,7 @@ public class ReceiptPanel extends javax.swing.JPanel {
             resultsTable.setValueAt("", 2, 0);
             resultsTable.setValueAt("", 2, 1);
 
-        } catch (PrinterException ex) {
+        } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Unable to print " + ex.getMessage());
         }
     }//GEN-LAST:event_jLabel2MousePressed

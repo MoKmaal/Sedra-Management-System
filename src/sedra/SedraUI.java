@@ -160,7 +160,6 @@ public class SedraUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(0, 0));
-        setUndecorated(true);
         setSize(new Dimension(width, height)
         );
         getContentPane().setLayout(null);
@@ -377,22 +376,22 @@ public class SedraUI extends javax.swing.JFrame {
 
     private void bgMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bgMousePressed
         // TODO add your handling code here:
-        xx = evt.getX();
-        yy = evt.getY();
-        setOpacity((float) (0.8));
+        //xx = evt.getX();
+        //yy = evt.getY();
+        //setOpacity((float) (0.8));
     }//GEN-LAST:event_bgMousePressed
 
     private void bgMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bgMouseDragged
         // TODO add your handling code here:
-        int x = evt.getXOnScreen();
-        int y = evt.getYOnScreen();
-        this.setLocation(x - xx, y - yy);
+        //int x = evt.getXOnScreen();
+        //int y = evt.getYOnScreen();
+        //this.setLocation(x - xx, y - yy);
 
     }//GEN-LAST:event_bgMouseDragged
 
     private void bgMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bgMouseReleased
         // TODO add your handling code here:
-        setOpacity((float) (1));
+       // setOpacity((float) (1));
 
     }//GEN-LAST:event_bgMouseReleased
 

@@ -11,6 +11,7 @@ import Database.DebtData;
 import Database.HomeData;
 import Database.Retrieve;
 import Files.CustomersReports;
+import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -69,8 +70,8 @@ public class AccountPanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        customerTypeComboSearch = new javax.swing.JComboBox<>();
-        customerNameIDComboSearch = new javax.swing.JComboBox<>();
+        customerTypeComboSearch = new javax.swing.JComboBox<String>();
+        customerNameIDComboSearch = new javax.swing.JComboBox<String>();
         customerAccountPane = new javax.swing.JPanel();
         customerName = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -87,6 +88,8 @@ public class AccountPanel extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        customerPhone5 = new javax.swing.JLabel();
+        setDiscount = new javax.swing.JLabel();
 
         setLayout(null);
 
@@ -112,7 +115,7 @@ public class AccountPanel extends javax.swing.JPanel {
 
         customerTypeComboSearch.setBackground(Colors.FIELDS_COLOR);
         customerTypeComboSearch.setForeground(new java.awt.Color(64, 43, 100));
-        customerTypeComboSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "Doctor", "Customer" }));
+        customerTypeComboSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "Doctor", "Customer" }));
         customerTypeComboSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 customerTypeComboSearchActionPerformed(evt);
@@ -121,7 +124,7 @@ public class AccountPanel extends javax.swing.JPanel {
 
         customerNameIDComboSearch.setBackground(Colors.FIELDS_COLOR);
         customerNameIDComboSearch.setForeground(new java.awt.Color(64, 43, 100));
-        customerNameIDComboSearch.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
+        customerNameIDComboSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "" }));
         customerNameIDComboSearch.setBorder(null);
         customerNameIDComboSearch.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
         customerNameIDComboSearch.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
@@ -166,6 +169,11 @@ public class AccountPanel extends javax.swing.JPanel {
         customerName.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         customerName.setForeground(Colors.LABELS_COLOR);
         customerName.setText(" ");
+        customerName.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                customerNameMouseClicked(evt);
+            }
+        });
 
         customerPhone.setForeground(Colors.LABELS_COLOR);
         customerPhone.setText(" ");
@@ -193,25 +201,25 @@ public class AccountPanel extends javax.swing.JPanel {
         customerPhone4.setForeground(Colors.LABELS_COLOR);
         customerPhone4.setText("Have to pay:");
 
-        allCustomerInvoices.setBackground(new java.awt.Color(255, 255, 255));
-        allCustomerInvoices.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        allCustomerInvoices.setForeground(Colors.LABELS_COLOR);
+        allCustomerInvoices.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        allCustomerInvoices.setForeground(new java.awt.Color(1, 1, 1));
         allCustomerInvoices.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Date", "Invoice ID", "Name", "Size", "Quantity", "Price", "Total"
+                "Date", "Invoice ID", "Name", "Size", "Quantity", "Price", "Done", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false, false, false, false, true
+                false, true, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        allCustomerInvoices.setRowHeight(40);
         jScrollPane3.setViewportView(allCustomerInvoices);
 
         jButton1.setBackground(Colors.SIDE_COLOR);
@@ -244,6 +252,12 @@ public class AccountPanel extends javax.swing.JPanel {
             }
         });
 
+        customerPhone5.setForeground(Colors.LABELS_COLOR);
+        customerPhone5.setText("Discount");
+
+        setDiscount.setForeground(Colors.LABELS_COLOR);
+        setDiscount.setText("Discount");
+
         javax.swing.GroupLayout customerAccountPaneLayout = new javax.swing.GroupLayout(customerAccountPane);
         customerAccountPane.setLayout(customerAccountPaneLayout);
         customerAccountPaneLayout.setHorizontalGroup(
@@ -257,7 +271,12 @@ public class AccountPanel extends javax.swing.JPanel {
                             .addGroup(customerAccountPaneLayout.createSequentialGroup()
                                 .addGap(22, 22, 22)
                                 .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(customerName, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(customerAccountPaneLayout.createSequentialGroup()
+                                        .addComponent(customerName, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(45, 45, 45)
+                                        .addComponent(customerPhone5)
+                                        .addGap(26, 26, 26)
+                                        .addComponent(setDiscount))
                                     .addGroup(customerAccountPaneLayout.createSequentialGroup()
                                         .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addGroup(customerAccountPaneLayout.createSequentialGroup()
@@ -278,7 +297,7 @@ public class AccountPanel extends javax.swing.JPanel {
                                                 .addComponent(customerPhone4)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(haveToPay, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                        .addContainerGap(57, Short.MAX_VALUE))
+                        .addContainerGap(89, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, customerAccountPaneLayout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(jButton3)
@@ -290,7 +309,7 @@ public class AccountPanel extends javax.swing.JPanel {
             .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(customerAccountPaneLayout.createSequentialGroup()
                     .addGap(3, 3, 3)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 851, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 884, Short.MAX_VALUE)
                     .addGap(3, 3, 3)))
         );
         customerAccountPaneLayout.setVerticalGroup(
@@ -305,7 +324,10 @@ public class AccountPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(customerName)
+                .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(customerName)
+                    .addComponent(customerPhone5)
+                    .addComponent(setDiscount))
                 .addGap(4, 4, 4)
                 .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(customerPhone)
@@ -318,16 +340,16 @@ public class AccountPanel extends javax.swing.JPanel {
                     .addComponent(haveToPay)
                     .addComponent(customerPhone3)
                     .addComponent(customerMail))
-                .addContainerGap(304, Short.MAX_VALUE))
+                .addContainerGap(312, Short.MAX_VALUE))
             .addGroup(customerAccountPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, customerAccountPaneLayout.createSequentialGroup()
                     .addContainerGap(267, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(16, 16, 16)))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(50, 50, 50)))
         );
 
         homePanel.add(customerAccountPane);
-        customerAccountPane.setBounds(0, 0, 857, 581);
+        customerAccountPane.setBounds(0, 0, 890, 581);
 
         add(homePanel);
         homePanel.setBounds(0, 0, 0, 0);
@@ -346,7 +368,7 @@ public class AccountPanel extends javax.swing.JPanel {
             customerAddress.setText((String) hashMap.get("customerAddress"));
             customerPhone.setText((String) hashMap.get("customerPhone"));
             haveToPay.setText((String) hashMap.get("customerDebtPayable"));
-
+          setDiscount.setText(String.valueOf(hashMap.get("discount")));
             AccountData.getCustomerID(name);
             AccountData.showHistory();
         } catch (SQLException ex) {
@@ -485,6 +507,15 @@ public class AccountPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void customerNameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_customerNameMouseClicked
+        try {
+            // TODO add your handling code here:
+            allCustomerInvoices.print();
+        } catch (PrinterException ex) {
+            Logger.getLogger(AccountPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_customerNameMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JTable allCustomerInvoices;
@@ -498,6 +529,7 @@ public class AccountPanel extends javax.swing.JPanel {
     private javax.swing.JLabel customerPhone2;
     private javax.swing.JLabel customerPhone3;
     private javax.swing.JLabel customerPhone4;
+    private javax.swing.JLabel customerPhone5;
     private javax.swing.JComboBox<String> customerTypeComboSearch;
     private javax.swing.JLabel haveToPay;
     private javax.swing.JPanel homePanel;
@@ -510,6 +542,7 @@ public class AccountPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
+    public static javax.swing.JLabel setDiscount;
     // End of variables declaration//GEN-END:variables
 
     public void daf3Agel() {
