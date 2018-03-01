@@ -565,17 +565,9 @@ public class AccountPanel extends javax.swing.JPanel {
     }
 
     public static void daf3Agel(String name, float val) {
-        try {
-            // TODO add your handling code here:
-
-            DebtData.execute(name, val);
-            CustomersReports cr = new CustomersReports();
-            Timestamp t = new Timestamp(System.currentTimeMillis());
-            cr.writeDataIntoFile(name, t.toString(), String.valueOf(val));
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Check name or value");
-            ex.printStackTrace();
-        }
+        CustomersReports cr = new CustomersReports();
+        Timestamp t = new Timestamp(System.currentTimeMillis());
+        cr.writeDataIntoFile(name, t.toString(), String.valueOf(val));
     }
 
 }

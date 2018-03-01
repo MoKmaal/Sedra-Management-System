@@ -63,17 +63,20 @@ public class Retrieve {
 
     public void updateInvoice(ResultSet res, int recID, String itemID, int itemQuantity) {
         try {
-            query = "SELECT salesQuantity FROM Sales WHERE itemID='" + itemName + "' AND recID=" + recID
+            query = "SELECT salesQuantity,paymentType FROM Sales WHERE itemID='" + itemName + "' AND recID=" + recID
                     + " AND Size='" + itemSize + "'";
             res = stmt.executeQuery(query);
             res.next();
             int currentQ = res.getInt(1);
+            double paymentType = Double.parseDouble(res.getString(2));
+            
             int temp = currentQ - itemQuantity;
             if (temp < 0) {
                 JOptionPane.showMessageDialog(null, "Error: this invoice has only " + currentQ + " items");
             } else {
                 int tmp = currentQ - itemQuantity;
-                query = "UPDATE Sales SET salesQuantity=" + tmp + " WHERE itemID='" + itemName + "' AND Size='" + itemSize + "' AND recID=" + recID;
+              double lastReturnedDiscount=  paymentType*1.0*itemQuantity/currentQ;
+                query = "UPDATE Sales SET salesQuantity=" + tmp + ", paymentType='"+(paymentType-lastReturnedDiscount)+"' WHERE itemID='" + itemName + "' AND Size='" + itemSize + "' AND recID=" + recID;
                 Statement stmt1 = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
                 stmt1.executeUpdate(query);
                 query = "UPDATE Store SET itemQuantity=" + (currentQStore + itemQuantity) + " Where itemID='" + itemName + "' "
@@ -81,16 +84,16 @@ public class Retrieve {
                 Statement stmt2 = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
                 stmt2.executeUpdate(query);
-                updateDebt(res, itemName, itemQuantity, customerName);
+                updateDebt(res, itemName, itemQuantity, customerName,lastReturnedDiscount);
 
             }
         } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, "من فضلك تأكد من رقم الفاتورة وباقى البيانات المدخلة");
+            JOptionPane.showMessageDialog(null, "من فضلك تأكد من رقم الفاتورة وباقى البيانات المدخلة");
         }
 
     }
 
-    public void updateDebt(ResultSet res, String itemID, int itemQuantity, String customerName) {
+    public void updateDebt(ResultSet res, String itemID, int itemQuantity, String customerName,double lastReturnedDiscount) {
         try {
 
             query = "SELECT customerID FROM Sales where recID=" + recID;
@@ -102,9 +105,10 @@ public class Retrieve {
             res.next();
             int debt = res.getInt(1);
             String type;
-            query = "SELECT costomerType FROM Customer WHERE customerID=" + custID;
+            query = "SELECT costomerType,discount FROM Customer WHERE customerID=" + custID;
             res = stmt.executeQuery(query);
             res.next();
+            double customercurrentdiscount=Double.parseDouble(res.getString(2));
             type = res.getString(1);
             if (type.equalsIgnoreCase("Doctor")) {
                 query = "SELECT itemDocPrice from Store Where itemID='" + itemID + "' AND itemSize='" + itemSize + "'";
@@ -118,7 +122,9 @@ public class Retrieve {
             float price = res.getFloat(1);
             float returnedValue = itemQuantity * price;
             float remain = debt - returnedValue;
-            query = "UPDATE Customer SET customerDebtPayable= " + remain + " WHERE customerName='" + customerName + "'";
+            remain+=lastReturnedDiscount;
+            customercurrentdiscount-=lastReturnedDiscount;
+            query = "UPDATE Customer SET customerDebtPayable= " + remain + ",Discount='"+customercurrentdiscount+"' WHERE customerName='" + customerName + "'";
             stmt.executeUpdate(query);
             JOptionPane.showMessageDialog(null, "Done");
         } catch (SQLException ex) {

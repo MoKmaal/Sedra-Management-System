@@ -30,11 +30,12 @@ public class StoreData {
     public static List<String> listDocPrice = new ArrayList<>();
     public static List<String> listCustomerPrice = new ArrayList<>();
     public static List<String> listSize = new ArrayList<>();
+    public static List<String> listDiscount = new ArrayList<>();
     static String Query = "SELECT * FROM Store";
     static ResultSet res;
     static Connection conn;
     static Statement stmt;
-    static String sizesStatic[] = {"xxxs","xxs","xs", "s", "m", "l", "xl", "xxl", "xxxl", "xxxxl", "xxxxxl",
+    static String sizesStatic[] = {"xxxxs","xxxs","xxs","xs", "s", "m", "l", "xl", "xxl", "xxxl", "xxxxl", "xxxxxl",
         "xxxxxxl"};
 
     public static void getStoreData() throws SQLException {

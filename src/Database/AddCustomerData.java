@@ -56,12 +56,12 @@ public class AddCustomerData {
     public void execute() {
         try (Connection conn = DriverManager.getConnection(URL, HOST_NAME, PASSWORD);
                 Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
-            query = "Insert into Customer (customerName,customerMail,customerPhone,customerAddress,costomerType) Values ('"
+            query = "Insert into Customer (customerName,customerMail,customerPhone,customerAddress,costomerType,discount) Values ('"
                     + username + "','"
                     + email
                     + "','" + phone + "','"
                     + address
-                    + "','" + type + "')";
+                    + "','" + type + "',0)";
 
             stmt.executeUpdate(query);
         } catch (SQLException ex) {
